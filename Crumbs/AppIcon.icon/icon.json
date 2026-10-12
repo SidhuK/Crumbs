@@ -1,0 +1,105 @@
+{
+  "fill-specializations" : [
+    {
+      "value" : {
+        "linear-gradient" : [
+          "display-p3:1.00000,0.77255,0.18824,1.00000",
+          "display-p3:1.00000,0.62353,0.03922,1.00000"
+        ]
+      }
+    },
+    {
+      "appearance" : "dark",
+      "value" : {
+        "linear-gradient" : [
+          "display-p3:0.16471,0.14118,0.08627,1.00000",
+          "display-p3:0.06275,0.05098,0.02745,1.00000"
+        ]
+      }
+    }
+  ],
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "display-p3:1.00000,1.00000,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "display-p3:1.00000,0.47843,0.20000,1.00000"
+              }
+            }
+          ],
+          "hidden" : false,
+          "image-name" : "Asterisk.svg",
+          "name" : "Asterisk",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -89.27499999999986,
+              -6
+            ]
+          }
+        }
+      ],
+      "name" : "Asterisk",
+      "shadow" : {
+        "kind" : "layer-color",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0
+      }
+    },
+    {
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "display-p3:1.00000,1.00000,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "display-p3:1.00000,0.78431,0.23922,1.00000"
+              }
+            }
+          ],
+          "glass" : false,
+          "hidden" : false,
+          "image-name" : "Letters.svg",
+          "name" : "Letters",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -94,
+              0
+            ]
+          }
+        }
+      ],
+      "name" : "Letters",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.25
+      },
+      "specular" : false,
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}

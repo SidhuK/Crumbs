@@ -1,0 +1,388 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%lld more lines" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld more line"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld more lines"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Accessibility" : {
+
+    },
+    "Accessibility access lets Crumbs notice the capture shortcut and copy your selection from other apps. Nothing leaves your Mac." : {
+
+    },
+    "Add a note or a prompt (%@)" : {
+
+    },
+    "Add New Notes Here" : {
+
+    },
+    "Allow Access…" : {
+
+    },
+    "Allow Accessibility access" : {
+
+    },
+    "Allowed" : {
+
+    },
+    "Bring the panel forward when it's hidden, so you can see what you saved." : {
+
+    },
+    "Capture selection" : {
+
+    },
+    "Capturing" : {
+
+    },
+    "Capturing works in every app." : {
+
+    },
+    "Change…" : {
+
+    },
+    "Clear Done Notes" : {
+
+    },
+    "Clear Search" : {
+
+    },
+    "Clear Shortcut" : {
+
+    },
+    "Click to record a new shortcut" : {
+
+    },
+    "Collapse" : {
+
+    },
+    "Command + Command" : {
+
+    },
+    "Control + Control" : {
+
+    },
+    "Copied %lld Notes" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Copied"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Copied %lld Notes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Copied as List" : {
+
+    },
+    "Copy" : {
+
+    },
+    "Copy as List" : {
+
+    },
+    "Couldn’t save your notes" : {
+
+    },
+    "Crumbs" : {
+
+    },
+    "Crumbs needs it to notice %@ and copy your selection from other apps." : {
+
+    },
+    "Default section for new notes" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Delete Section" : {
+
+    },
+    "Deleted %lld Notes · ⌘Z to Undo" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Deleted · ⌘Z to Undo"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Deleted %lld Notes · ⌘Z to Undo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Deleted Section and %lld Notes · ⌘Z to Undo" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Deleted Section and %lld Note · ⌘Z to Undo"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Deleted Section and %lld Notes · ⌘Z to Undo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Done notes stay in your Markdown file until you clear them." : {
+
+    },
+    "Each list is a plain Markdown file. Edit them in any app and Crumbs picks up the changes." : {
+
+    },
+    "Edit" : {
+
+    },
+    "Edit in New Window" : {
+
+    },
+    "Everywhere" : {
+
+    },
+    "Expand" : {
+
+    },
+    "Expand or Collapse" : {
+
+    },
+    "General" : {
+
+    },
+    "Hide done notes" : {
+
+    },
+    "Hide Done Notes" : {
+
+    },
+    "Hide Panel" : {
+
+    },
+    "In the Panel" : {
+
+    },
+    "List" : {
+
+    },
+    "Lists" : {
+
+    },
+    "Mark as Done" : {
+
+    },
+    "Mark as Not Done" : {
+
+    },
+    "Mark notes as done after Copy as List" : {
+
+    },
+    "Merge Notes" : {
+
+    },
+    "Merged %lld Notes" : {
+
+    },
+    "More" : {
+
+    },
+    "Move List to Trash…" : {
+
+    },
+    "Move to" : {
+
+    },
+    "Move Up or Down" : {
+
+    },
+    "New List…" : {
+
+    },
+    "New Note" : {
+
+    },
+    "New notes are added to this section" : {
+
+    },
+    "New Section" : {
+
+    },
+    "New Section…" : {
+
+    },
+    "No Matches" : {
+
+    },
+    "Note" : {
+
+    },
+    "Notes" : {
+
+    },
+    "Notes Folder" : {
+
+    },
+    "Notes you send to a chat are checked off automatically." : {
+
+    },
+    "Nothing Saved Yet" : {
+
+    },
+    "Off" : {
+
+    },
+    "Open" : {
+
+    },
+    "Open at login" : {
+
+    },
+    "Open System Settings" : {
+
+    },
+    "Option + Option" : {
+
+    },
+    "Paste as Note" : {
+
+    },
+    "Permissions" : {
+
+    },
+    "Press a key combination, or Esc to cancel" : {
+
+    },
+    "Quit Crumbs" : {
+
+    },
+    "Record Shortcut" : {
+
+    },
+    "Rename List…" : {
+
+    },
+    "Rename Section" : {
+
+    },
+    "Required to capture text from other apps." : {
+
+    },
+    "Save what you'll need later, from any app." : {
+
+    },
+    "Search" : {
+
+    },
+    "Section Deleted" : {
+
+    },
+    "Section Name" : {
+
+    },
+    "Select notes to copy" : {
+
+    },
+    "Select text in any app and press %@ to keep it here." : {
+
+    },
+    "Select text in any app, then tap the key twice." : {
+
+    },
+    "Settings…" : {
+
+    },
+    "Shift + Shift" : {
+
+    },
+    "Shortcuts" : {
+
+    },
+    "Show in Finder" : {
+
+    },
+    "Show Less" : {
+
+    },
+    "Show or hide the panel" : {
+
+    },
+    "Show Panel" : {
+
+    },
+    "Show the panel after capturing" : {
+
+    },
+    "Storage" : {
+
+    },
+    "System" : {
+
+    },
+    "Type a note below, or paste with ⌘V." : {
+
+    },
+    "Type Shortcut…" : {
+
+    },
+    "Undo" : {
+
+    },
+    "Use Default" : {
+
+    },
+    "Version %@" : {
+
+    },
+    "Works from any app." : {
+
+    }
+  },
+  "version" : "1.0"
+}

@@ -2,42 +2,41 @@
 //  CrumbsUITests.swift
 //  CrumbsUITests
 //
-//  Created by Karat Sidhu on 12/10/26.
-//
 
 import XCTest
 
 final class CrumbsUITests: XCTestCase {
+    private var storageFolder: URL!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        storageFolder = URL.temporaryDirectory.appending(path: "CrumbsUITests-\(UUID().uuidString)", directoryHint: .isDirectory)
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        try? FileManager.default.removeItem(at: storageFolder)
     }
 
+    /// Launches against an empty folder and checks the panel comes up and saves a typed note.
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testComposerAddsNoteToMarkdownFile() throws {
         let app = XCUIApplication()
+        app.launchArguments = [
+            "-storageFolder", storageFolder.path(percentEncoded: false),
+            "-activeList", "UITest",
+            "-uiTesting",
+        ]
         app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
-    }
+        let composer = app.descendants(matching: .any)["composer"].firstMatch
+        XCTAssertTrue(composer.waitForExistence(timeout: 5))
+        composer.click()
+        composer.typeText("Remember the schema version\r")
 
-    @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
-        }
+        let fileURL = storageFolder.appending(path: "UITest.md")
+        let saved = expectation(for: NSPredicate { _, _ in
+            (try? String(contentsOf: fileURL, encoding: .utf8))?.contains("- [ ] Remember the schema version") == true
+        }, evaluatedWith: nil)
+        wait(for: [saved], timeout: 5)
     }
 }

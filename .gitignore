@@ -1,0 +1,9 @@
+# Xcode per-user state and build products
+xcuserdata/
+DerivedData/
+*.xcuserstate
+
+# macOS and tooling
+.DS_Store
+*.profraw
+__pycache__/
