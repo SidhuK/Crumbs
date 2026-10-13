@@ -32,6 +32,7 @@ Your notes are plain Markdown files on your disk. There's no account and no sync
 - [How it's put together](#how-its-put-together)
 - [Tests](#tests)
 - [Branding](#branding)
+- [License](#license)
 
 ## What it looks like
 
@@ -189,3 +190,9 @@ The menu bar icon is the pixel asterisk from the app icon, drawn in code as a 9Ã
 The app icon is `Crumbs/AppIcon.icon`, an Icon Composer document. It sets "CR / UM / BS*" in Geist Pixel on a yellow gradient. `Scripts/make_app_icon.py` generated the first version, using `Scripts/text_paths.swift` to turn the letters into vector paths. The icon has been adjusted by hand in Icon Composer since then, and running the script again would undo those adjustments. Make further changes in Icon Composer.
 
 The screenshots in `docs/images` come from the app's own SwiftUI views, rendered offscreen with sample notes.
+
+## License
+
+Crumbs is released under the MIT License. See [`LICENSE`](LICENSE).
+
+The bundled Geist Pixel font keeps its own license, the SIL Open Font License. The website in `website/` started from a GPL-3.0 template and keeps that license. See [`website/README.md`](website/README.md).
