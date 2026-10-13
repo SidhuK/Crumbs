@@ -101,8 +101,7 @@ private struct AppHeader: View {
                 .frame(width: 56, height: 56)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Crumbs")
-                    .font(.title2.weight(.semibold))
+                Wordmark(size: 26)
                 Text("Save what you'll need later, from any app.")
                     .foregroundStyle(.secondary)
                 Text("Version \(version)")

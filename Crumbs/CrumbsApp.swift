@@ -12,10 +12,12 @@ struct CrumbsApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
-        MenuBarExtra("Crumbs", systemImage: "square.stack.3d.down.forward") {
+        MenuBarExtra {
             if let controller = appDelegate.controller {
                 MenuBarMenu(controller: controller)
             }
+        } label: {
+            Image(nsImage: Brand.menuBarIcon)
         }
     }
 }

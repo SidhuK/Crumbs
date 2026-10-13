@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ is used by another app" : {
+
+    },
     "%lld more lines" : {
       "localizations" : {
         "en" : {
@@ -41,13 +44,22 @@
     "Allow Accessibility access" : {
 
     },
+    "Allow Accessibility Access" : {
+
+    },
     "Allowed" : {
 
     },
     "Bring the panel forward when it's hidden, so you can see what you saved." : {
 
     },
+    "Cancel" : {
+
+    },
     "Capture selection" : {
+
+    },
+    "Captured" : {
 
     },
     "Capturing" : {
@@ -57,6 +69,9 @@
 
     },
     "Change…" : {
+
+    },
+    "Choose where Crumbs keeps its Markdown files." : {
 
     },
     "Clear Done Notes" : {
@@ -111,7 +126,22 @@
     "Copy as List" : {
 
     },
+    "Couldn't create the list." : {
+
+    },
+    "Couldn't move the list to the Trash." : {
+
+    },
+    "Couldn’t read %@.md. It was left untouched." : {
+
+    },
+    "Couldn't rename the list." : {
+
+    },
     "Couldn’t save your notes" : {
+
+    },
+    "Create" : {
 
     },
     "Crumbs" : {
@@ -185,6 +215,9 @@
     "Edit in New Window" : {
 
     },
+    "Edited elsewhere too. Saved %@.md" : {
+
+    },
     "Everywhere" : {
 
     },
@@ -215,6 +248,9 @@
     "Lists" : {
 
     },
+    "Lists are saved as Markdown files." : {
+
+    },
     "Mark as Done" : {
 
     },
@@ -233,13 +269,22 @@
     "More" : {
 
     },
+    "Move “%@” to the Trash?" : {
+
+    },
     "Move List to Trash…" : {
 
     },
     "Move to" : {
 
     },
+    "Move to Trash" : {
+
+    },
     "Move Up or Down" : {
+
+    },
+    "New List" : {
 
     },
     "New List…" : {
@@ -260,6 +305,9 @@
     "No Matches" : {
 
     },
+    "No Section" : {
+
+    },
     "Note" : {
 
     },
@@ -273,6 +321,9 @@
 
     },
     "Nothing Saved Yet" : {
+
+    },
+    "Nothing Selected" : {
 
     },
     "Off" : {
@@ -303,6 +354,12 @@
 
     },
     "Record Shortcut" : {
+
+    },
+    "Rename" : {
+
+    },
+    "Rename List" : {
 
     },
     "Rename List…" : {
@@ -374,13 +431,25 @@
     "Undo" : {
 
     },
+    "Untitled" : {
+
+    },
     "Use Default" : {
+
+    },
+    "Use Folder" : {
 
     },
     "Version %@" : {
 
     },
     "Works from any app." : {
+
+    },
+    "You can restore the Markdown file from the Trash." : {
+
+    },
+    "Your latest changes couldn’t be saved, so the list was left open." : {
 
     }
   },

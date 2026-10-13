@@ -12,7 +12,21 @@ struct PanelHeader: View {
     var body: some View {
         @Bindable var model = model
 
-        HStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
+            Wordmark(size: 20)
+                .padding(.leading, 6)
+            searchRow
+        }
+        .padding(.horizontal, PanelStyle.horizontalInset)
+        .padding(.top, 14)
+        .padding(.bottom, 4)
+        .background(WindowDragArea())
+    }
+
+    private var searchRow: some View {
+        @Bindable var model = model
+
+        return HStack(spacing: 8) {
             HStack(spacing: 6) {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
@@ -37,10 +51,6 @@ struct PanelHeader: View {
             PanelMenu()
                 .background(PanelStyle.cardFill, in: .circle)
         }
-        .padding(.horizontal, PanelStyle.horizontalInset)
-        .padding(.top, 12)
-        .padding(.bottom, 4)
-        .background(WindowDragArea())
     }
 }
 
