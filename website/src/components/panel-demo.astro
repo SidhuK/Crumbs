@@ -1,0 +1,296 @@
+---
+import Container from "@/components/container.astro";
+import CrumbsPanel from "@/components/crumbs-panel.astro";
+import DitherCloud from "@/components/dither-cloud.astro";
+import Asterisk from "@/components/ui/asterisk.astro";
+
+const tabs = [
+  {
+    state: "capture",
+    label: "Capture",
+    desc: "Text selected in another app is saved to the Crumbs panel after tapping Shift twice. A Captured pill appears next to the pointer and the new note slides into the list.",
+  },
+  {
+    state: "organize",
+    label: "Organize",
+    desc: "A note is dragged from the Research section into the For the chat section. The panel menu lists your lists, one per project, and lets you add sections.",
+  },
+  {
+    state: "handoff",
+    label: "Hand off",
+    desc: "Three notes are selected and copied with Shift Command C as a numbered list. They are pasted into a chat and checked off in Crumbs.",
+  },
+  {
+    state: "files",
+    label: "Own it",
+    desc: "The same list open as Inbox.md, a plain Markdown file, in a text editor. A line typed in the file shows up in the panel as a new note.",
+  },
+];
+---
+
+<section id="tour" aria-labelledby="tour-heading" class="relative overflow-x-clip pt-20 pb-8 md:pt-28">
+  <Container class="md:px-10">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="flex items-center justify-center gap-2 font-mono text-[12px] text-muted">
+        <Asterisk class="size-2.5 text-amber" />a closer look
+      </p>
+      <h2
+        id="tour-heading"
+        class="mt-5 font-serif text-[clamp(2.25rem,1.6rem+2.6vw,3.25rem)] leading-[1.1] font-medium tracking-[-0.02em] text-balance text-ink">
+        Catch it, sort it, hand it off.
+      </h2>
+    </div>
+    <div class="mt-14 flex justify-center md:mt-16">
+      <div class="hd" data-panel-demo>
+        <div class="hd-cloud" aria-hidden="true">
+          <DitherCloud class="hd-cloud-layer" />
+        </div>
+
+        <div class="hd-stage">
+          <div
+            id="tour-panel"
+            role="tabpanel"
+            aria-labelledby="tour-tab-capture"
+            tabindex="0"
+            class="hd-panel">
+            <p class="sr-only" data-tour-desc>{tabs[0].desc}</p>
+            <CrumbsPanel />
+          </div>
+        </div>
+
+        <div class="hd-tabs" role="tablist" aria-label="What Crumbs does">
+          {
+            tabs.map((tab, i) => (
+              <button
+                type="button"
+                role="tab"
+                id={`tour-tab-${tab.state}`}
+                class="hd-tab"
+                aria-selected={i === 0 ? "true" : "false"}
+                aria-controls="tour-panel"
+                tabindex={i === 0 ? 0 : -1}
+                data-state={tab.state}
+                data-desc={tab.desc}>
+                <span class="hd-bar" aria-hidden="true">
+                  <span class="hd-fill" />
+                </span>
+                <span class="hd-label">{tab.label}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style is:global>
+  /* The demo is sized in em so the panel, the windows around it and the tabs scale together. */
+  .hd {
+    position: relative;
+    width: fit-content;
+    margin-inline: auto;
+    font-size: min(14px, calc((100vw - 2.5rem) / 30.5));
+  }
+  @media (min-width: 640px) {
+    .hd {
+      font-size: min(14px, calc((100vw - 2.5rem) / 49));
+    }
+  }
+  @media (min-width: 1024px) {
+    .hd {
+      font-size: 14px;
+    }
+  }
+
+  .hd-cloud {
+    position: absolute;
+    inset: -14% -20% -12% -20%;
+    pointer-events: none;
+  }
+  @media (min-width: 640px) {
+    .hd-cloud {
+      inset: -16% -30% -14% -14%;
+    }
+  }
+
+  .hd-stage {
+    position: relative;
+  }
+
+
+  .hd-panel {
+    position: relative;
+    border-radius: 1.5em;
+  }
+  .hd-panel:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 6px;
+  }
+
+  .hd-tabs {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.9em;
+    width: 30em;
+    margin-top: 1.5em;
+  }
+  @media (min-width: 640px) {
+    .hd-tabs {
+      margin-inline: auto;
+    }
+  }
+  .hd-tab {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.4rem 0 0.5rem;
+    border-radius: 4px;
+    text-align: left;
+    font-size: 12px;
+    line-height: 1.2;
+    color: var(--color-muted);
+    transition: color 0.2s ease;
+  }
+  .hd-tab:hover,
+  .hd-tab[aria-selected='true'] {
+    color: var(--color-ink);
+  }
+  .hd-tab:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 4px;
+  }
+  .hd-bar {
+    position: relative;
+    display: block;
+    height: 2px;
+    border-radius: 2px;
+    background: oklch(0.89 0.006 81.53);
+    overflow: hidden;
+  }
+  .hd-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .hd-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Each tab's bar fills while it's shown; the script moves on when the fill finishes. */
+  .hd-tab[aria-selected='true'] .hd-fill {
+    animation: hd-progress 5.5s linear both;
+  }
+  /* Hold the whole demo until it scrolls into view, so mobile visitors see it from the start. */
+  .hd[data-offscreen] * {
+    animation-play-state: paused !important;
+  }
+  .hd:has(:focus-visible) .hd-fill {
+    animation-play-state: paused;
+  }
+  /* Touch screens keep :hover after a tap, which would stop the cycle for good. */
+  @media (hover: hover) {
+    .hd:hover .hd-fill {
+      animation-play-state: paused;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hd-tab[aria-selected='true'] .hd-fill {
+      animation: none;
+      transform: none;
+    }
+  }
+  @keyframes hd-progress {
+    to {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const demo = document.querySelector<HTMLElement>("[data-panel-demo]");
+  const scene = demo?.querySelector<HTMLElement>("[data-crumbs-panel]");
+  const tabpanel = demo?.querySelector<HTMLElement>('[role="tabpanel"]');
+  const desc = demo?.querySelector<HTMLElement>("[data-tour-desc]");
+  const tabs = Array.from(demo?.querySelectorAll<HTMLElement>('[role="tab"]') ?? []);
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let flips: Animation[] = [];
+
+  // Notes that change position slide from where they were (a FLIP animation), so the
+  // dragged note visibly travels into its new section.
+  function setState(state: string) {
+    if (!scene) return;
+    flips.forEach((animation) => animation.cancel());
+    flips = [];
+    const items =
+      state === "organize" && !reduceMotion.matches
+        ? Array.from(scene.querySelectorAll<HTMLElement>("[data-flip]"))
+        : [];
+    const before = items.map((el) => el.getBoundingClientRect().top);
+    scene.dataset.state = state;
+    items.forEach((el, i) => {
+      const dy = before[i] - el.getBoundingClientRect().top;
+      if (!dy) return;
+      const drag = el.dataset.flip === "drag";
+      flips.push(
+        el.animate([{ translate: `0 ${dy}px` }, { translate: "0 0" }], {
+          duration: drag ? 1000 : 450,
+          delay: drag ? 350 : 750,
+          easing: "cubic-bezier(0.45, 0, 0.2, 1)",
+          fill: "backwards",
+        }),
+      );
+    });
+  }
+
+  function select(index: number, moveFocus = false) {
+    const tab = tabs[index];
+    if (!tab || !tabpanel || !desc) return;
+    for (const t of tabs) {
+      const selected = t === tab;
+      t.setAttribute("aria-selected", String(selected));
+      t.tabIndex = selected ? 0 : -1;
+    }
+    // Restart the progress bar, including when the current tab is clicked again.
+    const fill = tab.querySelector<HTMLElement>(".hd-fill");
+    if (fill) {
+      fill.style.animation = "none";
+      void fill.offsetWidth;
+      fill.style.animation = "";
+    }
+    tabpanel.setAttribute("aria-labelledby", tab.id);
+    desc.textContent = tab.dataset.desc ?? "";
+    if (scene && scene.dataset.state !== tab.dataset.state) setState(tab.dataset.state ?? "capture");
+    if (moveFocus) tab.focus();
+  }
+
+  if (demo && "IntersectionObserver" in window) {
+    new IntersectionObserver(([entry]) => {
+      demo.toggleAttribute("data-offscreen", !entry.isIntersecting);
+    }, { threshold: 0.35 }).observe(demo);
+  }
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener("click", () => select(i));
+    tab.querySelector(".hd-fill")?.addEventListener("animationend", () => {
+      if (tab.getAttribute("aria-selected") === "true") select((i + 1) % tabs.length);
+    });
+    tab.addEventListener("keydown", (event) => {
+      const last = tabs.length - 1;
+      const next =
+        event.key === "ArrowRight" ? (i === last ? 0 : i + 1)
+        : event.key === "ArrowLeft" ? (i === 0 ? last : i - 1)
+        : event.key === "Home" ? 0
+        : event.key === "End" ? last
+        : -1;
+      if (next < 0) return;
+      event.preventDefault();
+      select(next, true);
+    });
+  });
+</script>

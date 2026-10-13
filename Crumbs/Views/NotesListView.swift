@@ -91,12 +91,21 @@ private struct EmptyStateView: View {
     var body: some View {
         if !hasVisibleNotes {
             VStack(spacing: 8) {
-                Image(systemName: isSearching ? "magnifyingglass" : "text.badge.plus")
-                    .font(.system(size: 26, weight: .light))
-                    .foregroundStyle(.tertiary)
-                    .accessibilityHidden(true)
+                Group {
+                    if isSearching {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 26, weight: .light))
+                            .foregroundStyle(.tertiary)
+                    } else {
+                        PixelAsterisk()
+                            .fill(.tint)
+                            .frame(width: 27, height: 27)
+                            .padding(.bottom, 4)
+                    }
+                }
+                .accessibilityHidden(true)
                 Text(isSearching ? "No Matches" : "Nothing Saved Yet")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(isSearching ? .system(size: 13, weight: .semibold) : Brand.wordmarkFont(size: 15))
                     .foregroundStyle(.secondary)
                 if !isSearching {
                     Text(emptyMessage)
@@ -140,7 +149,8 @@ private struct SectionHeaderView: View {
                     .layoutPriority(1)
                     .accessibilityAddTraits(.isHeader)
                 if isTarget {
-                    Circle()
+                    // A single square "pixel", to match the wordmark.
+                    Rectangle()
                         .fill(.tint)
                         .frame(width: 5, height: 5)
                         .help("New notes are added to this section")

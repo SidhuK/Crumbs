@@ -1,0 +1,254 @@
+---
+import Container from "@/components/container.astro";
+import Asterisk from "@/components/ui/asterisk.astro";
+---
+
+<section id="how-it-works" aria-labelledby="how-heading" class="pt-24 pb-12 md:pt-32 md:pb-16">
+  <Container class="md:px-10">
+    <div class="max-w-2xl">
+      <p class="label flex items-center gap-2">
+        <Asterisk class="size-2.5 text-amber" />how it works
+      </p>
+      <h2 id="how-heading" class="heading mt-5">Select. Tap tap. Done.</h2>
+      <p class="mt-6 max-w-xl text-[16px] leading-relaxed text-ink-soft">
+        Works in any app you can copy from.
+      </p>
+    </div>
+
+    <ol class="mt-16 grid gap-12 md:mt-20 md:grid-cols-3 md:gap-8 lg:gap-12">
+      <li>
+        <div class="stage" aria-hidden="true">
+          <p class="max-w-[17rem] text-[13px] leading-[1.75] text-ink-soft">
+            Presets make sharing easy, but <span class="selected">the moment a config can extend a base, someone needs to
+            undo what it added.</span>{" "}
+            <span class="text-faint">Most formats get this wrong.</span>
+          </p>
+        </div>
+        <p class="step-num">01</p>
+        <h3 class="step-title">Select some text</h3>
+        <p class="step-body">A browser, a PDF, your editor, a chat.</p>
+      </li>
+
+      <li>
+        <div class="stage relative" aria-hidden="true">
+          <span class="absolute top-5 left-1/2 -translate-x-1/2 -rotate-3 font-hand text-[1.2rem] leading-none font-medium tracking-[0.01em] whitespace-nowrap text-ink-soft">tap, tap</span>
+          <div class="mt-6 flex items-center gap-3">
+            <span class="cap cap-1"><span class="text-lg leading-none">⇧</span><span class="text-[10px]">shift</span></span>
+            <span class="cap cap-2"><span class="text-lg leading-none">⇧</span><span class="text-[10px]">shift</span></span>
+          </div>
+        </div>
+        <p class="step-num">02</p>
+        <h3 class="step-title">
+          Tap <kbd class="kbd">⇧</kbd> <kbd class="kbd">⇧</kbd>
+        </h3>
+        <p class="step-body">Two quick taps of Shift.</p>
+      </li>
+
+      <li>
+        <div class="stage relative" aria-hidden="true">
+          <div class="mini-panel">
+            <div class="flex items-center justify-between border-b border-line px-3 py-2">
+              <span class="flex items-center gap-1 font-pixel text-[11px] text-ink">
+                Crumbs<Asterisk class="size-2 text-amber" />
+              </span>
+              <span class="text-[10px] text-muted">Inbox</span>
+            </div>
+            <div class="space-y-1.5 p-2">
+              <div class="note-row">
+                <span class="tick"></span><span class="line-clamp-1">Ask about config versions</span>
+              </div>
+              <div class="note-row note-new">
+                <span class="tick"></span><span class="line-clamp-2">the moment a config can extend a base…</span>
+              </div>
+            </div>
+          </div>
+          <span class="captured">
+            <Asterisk class="size-3 text-amber-bright" />Captured
+          </span>
+        </div>
+        <p class="step-num">03</p>
+        <h3 class="step-title">It's a note</h3>
+        <p class="step-body">It lands in the side panel. You keep your place.</p>
+      </li>
+    </ol>
+  </Container>
+</section>
+
+<style>
+  .label {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    color: var(--color-muted);
+  }
+
+  .heading {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  /* Step strip */
+  .stage {
+    display: flex;
+    height: 11.5rem;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: 1.25rem;
+    background: var(--color-surface);
+    padding: 1.5rem;
+  }
+
+  .selected {
+    background: #cfe2ff;
+    color: var(--color-ink);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    border-radius: 2px;
+  }
+
+  .cap {
+    display: inline-flex;
+    width: 4.25rem;
+    height: 3.6rem;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid var(--color-line);
+    border-bottom-width: 3px;
+    border-radius: 0.7rem;
+    background: #fff;
+    padding: 0.45rem 0.55rem;
+    color: var(--color-ink);
+    box-shadow: 0 1px 2px rgb(40 30 20 / 0.04);
+  }
+
+  .mini-panel {
+    width: 12.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.8rem;
+    background: #fff;
+    box-shadow: 0 10px 30px -12px rgb(40 30 20 / 0.18);
+    transform: translate(1.5rem, -0.6rem);
+  }
+
+  .note-row {
+    display: flex;
+    gap: 0.45rem;
+    align-items: flex-start;
+    border-radius: 0.45rem;
+    padding: 0.35rem 0.45rem;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--color-ink-soft);
+  }
+
+  .note-new {
+    background: var(--color-hl-yellow);
+    color: var(--color-ink);
+  }
+
+  .tick {
+    margin-top: 0.1rem;
+    width: 0.65rem;
+    height: 0.65rem;
+    flex-shrink: 0;
+    border: 1px solid var(--color-faint);
+    border-radius: 9999px;
+  }
+
+  .captured {
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 9999px;
+    background: #262626;
+    padding: 0.4rem 0.8rem 0.4rem 0.6rem;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    box-shadow: 0 6px 16px -6px rgb(0 0 0 / 0.35);
+  }
+
+  .step-num {
+    margin-top: 1.75rem;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    color: var(--color-amber);
+  }
+
+  .step-title {
+    margin-top: 0.5rem;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+
+  .step-title .kbd {
+    font-size: 0.7em;
+    vertical-align: 0.2em;
+  }
+
+  .step-body {
+    margin-top: 0.5rem;
+    max-width: 22rem;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cap {
+      animation: press 3.2s ease-in-out infinite;
+    }
+    .cap-2 {
+      animation-delay: 0.22s;
+    }
+    .captured {
+      animation: pop 3.2s ease-out infinite;
+    }
+  }
+
+  @keyframes press {
+    0%,
+    6%,
+    100% {
+      transform: none;
+      border-bottom-width: 3px;
+    }
+    3% {
+      transform: translateY(2px);
+      border-bottom-width: 1px;
+    }
+  }
+
+  @keyframes pop {
+    0%,
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+    82% {
+      opacity: 1;
+      transform: none;
+    }
+    90% {
+      opacity: 0;
+      transform: translateY(4px) scale(0.96);
+    }
+    96% {
+      opacity: 0;
+      transform: translateY(4px) scale(0.96);
+    }
+  }
+</style>

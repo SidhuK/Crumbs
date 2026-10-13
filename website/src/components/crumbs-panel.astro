@@ -1,0 +1,1111 @@
+---
+// A live HTML/CSS recreation of the Crumbs floating panel, plus the windows around it
+// (the app text is captured from, a chat, a text editor) for the hero demo.
+//
+// Sizing: everything is in em, so set `font-size` on a parent. At 14px the panel is 420px wide.
+// Below 640px the scene is just the panel's width (30em); from 640px it is 48em wide with the
+// panel on the right and the other windows on the left.
+//
+// State: `data-state` on the root is "capture", "organize", "handoff" or "files". Changing it
+// replays that state's animations. Every animation ends on the finished state, so a frozen or
+// reduced-motion render still shows the whole story.
+import Asterisk from "@/components/ui/asterisk.astro";
+
+type DemoState = "capture" | "organize" | "handoff" | "files";
+
+interface Props {
+  id?: string;
+  class?: string;
+  state?: DemoState;
+}
+
+const { id, class: className, state = "capture" } = Astro.props;
+---
+
+<div id={id} class:list={["cp-scene", className]} data-crumbs-panel data-state={state} aria-hidden="true">
+  <div class="cp-window">
+    <div class="cp-head">
+      <div class="cp-wordmark">
+        Crumbs<span class="cp-ast"><Asterisk class="cp-ast-svg" /></span>
+      </div>
+      <div class="cp-searchrow">
+        <div class="cp-search">
+          <svg viewBox="0 0 16 16" class="cp-icon"
+            ><circle cx="6.8" cy="6.8" r="4.9" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path
+              d="M10.4 10.4 14 14"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"></path></svg
+          >
+          <span>Search</span>
+        </div>
+        <div class="cp-more">
+          <svg viewBox="0 0 16 4" class="cp-dots"
+            ><circle cx="2" cy="2" r="1.6"></circle><circle cx="8" cy="2" r="1.6"></circle><circle
+              cx="14"
+              cy="2"
+              r="1.6"></circle></svg
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="cp-list">
+      <div class="cp-sec" data-flip style="order: 10">
+        <span class="cp-sec-title">Research</span><i class="cp-target"></i><span class="cp-rule"></span>
+      </div>
+
+      <div class="cp-item" data-flip style="order: 20">
+        <div class="cp-row">
+          <span class="cp-check"><svg viewBox="0 0 12 12"><path d="M3.2 6.3 5.2 8.3 8.9 4.2"></path></svg></span>
+          <p class="cp-text">Read the <span class="cp-link">menu bar guidelines</span> before the redesign.</p>
+        </div>
+      </div>
+
+      <div class="cp-item cp-n3" data-flip="drag" data-done>
+        <div class="cp-row">
+          <span class="cp-check"><svg viewBox="0 0 12 12"><path d="M3.2 6.3 5.2 8.3 8.9 4.2"></path></svg></span>
+          <p class="cp-text">Why does the build only fail on CI?</p>
+          <span class="cp-grab"
+            ><svg viewBox="0 0 16 24" class="cp-pointer"
+              ><path d="M1.5 1.5v18.2l4.4-4.2 2.9 6.7 2.9-1.3-2.9-6.6h6.2z"></path></svg
+            ></span
+          >
+        </div>
+      </div>
+
+      <div class="cp-item cp-n0" data-flip style="order: 40">
+        <div class="cp-row">
+          <span class="cp-check"><svg viewBox="0 0 12 12"><path d="M3.2 6.3 5.2 8.3 8.9 4.2"></path></svg></span>
+          <p class="cp-text"><b>A panel that never takes focus</b> lets you keep typing.</p>
+        </div>
+      </div>
+
+      <div class="cp-sec" data-flip style="order: 50">
+        <span class="cp-sec-title">For the chat</span><span class="cp-rule"></span>
+      </div>
+
+      <div class="cp-item" data-flip data-done style="order: 60; --d: 1">
+        <div class="cp-row">
+          <span class="cp-check"><svg viewBox="0 0 12 12"><path d="M3.2 6.3 5.2 8.3 8.9 4.2"></path></svg></span>
+          <p class="cp-text">Rename <code>loadAll()</code> to <code>loadNotes()</code> everywhere.</p>
+        </div>
+      </div>
+
+      <div class="cp-item" data-flip data-done style="order: 70; --d: 2">
+        <div class="cp-row">
+          <span class="cp-check"><svg viewBox="0 0 12 12"><path d="M3.2 6.3 5.2 8.3 8.9 4.2"></path></svg></span>
+          <p class="cp-text">Add a test for the <b>empty state</b>.</p>
+        </div>
+      </div>
+
+      <div class="cp-item cp-n6" data-show="files" style="order: 80">
+        <div class="cp-row">
+          <span class="cp-check"><svg viewBox="0 0 12 12"><path d="M3.2 6.3 5.2 8.3 8.9 4.2"></path></svg></span>
+          <p class="cp-text">Write the release notes</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cp-composer">
+      <span class="cp-check cp-check-faint"></span>
+      <span class="cp-placeholder">Add a note or a prompt (Inbox)</span>
+    </div>
+
+    <div class="cp-menu" data-show="organize">
+      <div class="cp-menu-label">Lists</div>
+      <div class="cp-menu-item"><span class="cp-tick">✓</span>Inbox</div>
+      <div class="cp-menu-item">Launch</div>
+      <div class="cp-menu-item">Reading</div>
+      <div class="cp-menu-item cp-menu-dim">New List…</div>
+      <hr />
+      <div class="cp-menu-item cp-menu-hover">New Section</div>
+      <div class="cp-menu-item">Hide Done Notes</div>
+      <hr />
+      <div class="cp-menu-item">Show in Finder</div>
+    </div>
+
+    <div class="cp-toast" data-show="handoff">
+      <svg viewBox="0 0 16 16" class="cp-toast-icon"
+        ><circle cx="8" cy="8" r="8"></circle><path d="M4.6 8.3 7 10.6l4.4-5"></path></svg
+      >
+      Copied as List
+    </div>
+  </div>
+
+  <!-- Capture: text selected in some other app. -->
+  <div class="cp-card cp-src" data-show="capture">
+    <div class="cp-keys">
+      <span class="cp-key">⇧</span><span class="cp-key">⇧</span>
+    </div>
+    <div class="cp-src-title">Small tools, done well</div>
+    <p class="cp-src-body">
+      Good tools stay out of the way. <span class="cp-sel"
+        ><b>A panel that never takes focus</b> lets you keep typing.</span
+      ><span class="cp-caret-anchor"
+        ><svg viewBox="0 0 16 24" class="cp-pointer"
+          ><path d="M1.5 1.5v18.2l4.4-4.2 2.9 6.7 2.9-1.3-2.9-6.6h6.2z"></path></svg
+        ><span class="cp-hud"><Asterisk class="cp-hud-ast" />Captured</span></span
+      >
+    </p>
+    <p class="cp-src-body cp-src-dim">That's most of the trick.</p>
+  </div>
+
+  <!-- Hand off: the numbered list pasted into a chat. -->
+  <div class="cp-card cp-chat" data-show="handoff">
+    <div class="cp-keys">
+      <span class="cp-key">⇧</span><span class="cp-key">⌘</span><span class="cp-key">C</span>
+    </div>
+    <div class="cp-bar"><i></i><i></i><i></i><span>New chat</span></div>
+    <div class="cp-chat-body">
+      <div class="cp-chat-hello">What are we working on?</div>
+      <div class="cp-msg">
+        <div class="cp-msg-text">
+          1. Why does the build only fail on CI?<br />2. Rename `loadAll()` to `loadNotes()` everywhere.<br />3. Add a
+          test for the **empty state**.
+        </div>
+        <div class="cp-msg-foot">
+          <span class="cp-plus">+</span>
+          <span class="cp-send"
+            ><svg viewBox="0 0 16 16"><path d="M8 13V3.5M3.8 7.6 8 3.4l4.2 4.2"></path></svg></span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Own it: the same list as a Markdown file in a text editor. -->
+  <div class="cp-card cp-editor" data-show="files">
+    <div class="cp-bar">
+      <i></i><i></i><i></i>
+      <span
+        ><svg viewBox="0 0 12 14" class="cp-doc"
+          ><path d="M1.5 1h6l3 3v9h-9z M7.5 1v3h3"></path></svg
+        >Inbox.md</span
+      >
+    </div>
+    <div class="cp-path">Application Support <span>›</span> Crumbs <span>›</span> Inbox.md</div>
+    <div class="cp-code">
+      <div class="cp-h">## Research</div>
+      <div class="cp-blank"></div>
+      <div class="cp-li">
+        <span class="cp-m">- [ ]</span> Read the <span class="cp-m">[</span>menu bar guidelines<span class="cp-m"
+          >](https://developer.apple.com/design/)</span
+        > before the redesign.
+      </div>
+      <div class="cp-li">
+        <span class="cp-m">- [ ]</span>&#32;<span class="cp-m">**</span><b>A panel that never takes focus</b><span class="cp-m">**</span> lets you keep typing.
+      </div>
+      <div class="cp-blank"></div>
+      <div class="cp-h">## For the chat</div>
+      <div class="cp-blank"></div>
+      <div class="cp-li"><span class="cp-m">- <em>[x]</em></span> Why does the build only fail on CI?</div>
+      <div class="cp-li">
+        <span class="cp-m">- <em>[x]</em></span> Rename `loadAll()` to `loadNotes()` everywhere.
+      </div>
+      <div class="cp-li">
+        <span class="cp-m">- <em>[x]</em></span> Add a test for the <span class="cp-m">**</span><b>empty state</b><span
+          class="cp-m">**</span
+        >.
+      </div>
+      <div class="cp-li cp-typed-line">
+        <span class="cp-m">- [ ]</span> <span class="cp-typed">Write the release notes</span><span class="cp-caret"
+        ></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .cp-scene {
+    --cp-accent: #d96d00;
+    --cp-accent-bright: #ffb21f;
+    --cp-ink: #1d1d1f;
+    --cp-2: #85858b;
+    --cp-3: #a9a9ae;
+    --cp-card: rgb(255 255 255 / 0.92);
+    --cp-gap: 0.62em;
+    --cp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --cp-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    position: relative;
+    width: 30em;
+    height: 42em;
+    color: var(--cp-ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', Inter, system-ui, sans-serif;
+    line-height: 1.45;
+    text-align: left;
+    letter-spacing: -0.003em;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .cp-scene p {
+    margin: 0;
+  }
+
+  /* ---------- The panel ---------- */
+  .cp-window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30em;
+    height: 42em;
+    display: flex;
+    flex-direction: column;
+    border-radius: 2.4em;
+    background: rgb(219 218 215 / 0.8);
+    -webkit-backdrop-filter: blur(22px) saturate(1.6);
+    backdrop-filter: blur(22px) saturate(1.6);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.55),
+      0 0 0 1px rgb(40 30 10 / 0.09),
+      0 2.4em 4.5em -1.6em rgb(70 45 10 / 0.35),
+      0 0.8em 1.6em -0.8em rgb(0 0 0 / 0.18);
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .cp-head {
+    padding: 1.15em 0.97em 0.3em;
+  }
+  .cp-wordmark {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.12em;
+    padding-left: 0.3em;
+    font-family: var(--font-pixel);
+    font-size: 1.6em;
+    line-height: 1.1;
+    letter-spacing: 0;
+    color: #2a2a2c;
+  }
+  .cp-ast {
+    display: block;
+    width: 0.42em;
+    height: 0.42em;
+    margin-top: 0.06em;
+    color: var(--cp-accent);
+  }
+  .cp-ast-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .cp-searchrow {
+    display: flex;
+    gap: 0.65em;
+    margin-top: 0.8em;
+  }
+  .cp-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    height: 2.45em;
+    padding: 0 0.85em;
+    border-radius: 999px;
+    background: var(--cp-card);
+    color: #8a8a8f;
+    font-size: 1em;
+  }
+  .cp-search span {
+    font-size: 1.05em;
+  }
+  .cp-icon {
+    width: 1.05em;
+    height: 1.05em;
+    color: #7c7c81;
+  }
+  .cp-more {
+    display: grid;
+    place-items: center;
+    width: 2.45em;
+    height: 2.45em;
+    border-radius: 50%;
+    background: var(--cp-card);
+  }
+  .cp-dots {
+    width: 1em;
+    fill: #3a3a3c;
+  }
+
+  .cp-list {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--cp-gap);
+    padding: 0.35em 0.97em 0.5em;
+    overflow: hidden;
+  }
+
+  .cp-sec {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    padding: 0.7em 0.45em 0.05em;
+  }
+  .cp-sec-title {
+    font-size: 0.82em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #828287;
+    white-space: nowrap;
+  }
+  .cp-target {
+    width: 0.4em;
+    height: 0.4em;
+    background: var(--cp-accent);
+  }
+  .cp-rule {
+    flex: 1;
+    height: 1px;
+    background: rgb(0 0 0 / 0.1);
+  }
+
+  .cp-item {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr;
+  }
+  .cp-row {
+    position: relative;
+    min-height: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8em;
+    padding: 0.78em 0.97em;
+    border-radius: 1.3em;
+    background: var(--cp-card);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.04);
+    outline: 2px solid transparent;
+    outline-offset: -2px;
+  }
+  .cp-n0 .cp-row,
+  .cp-n6 .cp-row {
+    overflow: hidden;
+  }
+
+  .cp-check {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.17em;
+    border-radius: 50%;
+    border: 0.085em solid #8d8d92;
+  }
+  .cp-check svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+  }
+  .cp-check-faint {
+    border-color: #c4c4c8;
+  }
+
+  .cp-text {
+    font-size: 1.05em;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-decoration: line-through 1px transparent;
+  }
+  .cp-scene b {
+    font-weight: 650;
+  }
+  .cp-scene code {
+    font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+  }
+  .cp-link {
+    color: var(--cp-accent);
+  }
+
+  .cp-composer {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8em;
+    min-height: 3.4em;
+    margin: 0.3em 0.97em 0.97em;
+    padding: 0.97em;
+    border-radius: 1.3em;
+    background: var(--cp-card);
+  }
+  .cp-placeholder {
+    font-size: 1.05em;
+    color: #a3a3a8;
+  }
+
+  /* The "..." menu with the list picker. */
+  .cp-menu {
+    position: absolute;
+    top: 5.75em;
+    right: 0.97em;
+    width: 13.4em;
+    padding: 0.35em;
+    border-radius: 0.75em;
+    background: rgb(246 246 246 / 0.985);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    box-shadow:
+      0 0 0 1px rgb(0 0 0 / 0.1),
+      0 1em 2.2em -0.4em rgb(0 0 0 / 0.28);
+    font-size: 0.95em;
+    transform-origin: 92% 0;
+    z-index: 3;
+  }
+  .cp-menu-label {
+    padding: 0.25em 0.7em 0.15em;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #8a8a8f;
+  }
+  .cp-menu-item {
+    position: relative;
+    padding: 0.22em 0.7em 0.22em 1.6em;
+    border-radius: 0.4em;
+  }
+  .cp-menu-dim {
+    color: #3a3a3c;
+  }
+  .cp-menu-hover {
+    background: var(--cp-accent);
+    color: #fff;
+  }
+  .cp-tick {
+    position: absolute;
+    left: 0.55em;
+    font-weight: 600;
+  }
+  .cp-menu hr {
+    margin: 0.3em 0.7em;
+    border: 0;
+    border-top: 1px solid rgb(0 0 0 / 0.1);
+  }
+
+  .cp-toast {
+    position: absolute;
+    left: 50%;
+    bottom: 5.2em;
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: 0.55em 1.1em 0.55em 0.85em;
+    border-radius: 999px;
+    background: rgb(250 250 250 / 0.97);
+    box-shadow:
+      0 0 0 1px rgb(0 0 0 / 0.05),
+      0 0.4em 1.1em rgb(0 0 0 / 0.14);
+    font-size: 0.97em;
+    font-weight: 500;
+    white-space: nowrap;
+    translate: -50% 0;
+    z-index: 2;
+  }
+  .cp-toast-icon {
+    width: 1.1em;
+    height: 1.1em;
+  }
+  .cp-toast-icon circle {
+    fill: var(--cp-accent);
+  }
+  .cp-toast-icon path {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ---------- Other windows ---------- */
+  .cp-card {
+    position: absolute;
+    left: 0;
+    width: 19.5em;
+    border-radius: 1.1em;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgb(40 30 10 / 0.08),
+      0 1.8em 3.4em -1.2em rgb(70 45 10 / 0.35),
+      0 0.5em 1em -0.5em rgb(0 0 0 / 0.12);
+    z-index: 2;
+  }
+  .cp-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.75em 0.9em;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #555;
+  }
+  .cp-bar i {
+    width: 0.85em;
+    height: 0.85em;
+    border-radius: 50%;
+    background: #ff5f57;
+  }
+  .cp-bar i:nth-child(2) {
+    background: #febc2e;
+  }
+  .cp-bar i:nth-child(3) {
+    background: #28c840;
+  }
+  .cp-bar span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-inline: auto;
+    padding-right: 3.3em;
+  }
+
+  .cp-keys {
+    position: absolute;
+    top: -3.2em;
+    left: 0.4em;
+    display: flex;
+    gap: 0.35em;
+  }
+  .cp-key {
+    display: grid;
+    place-items: center;
+    min-width: 2.3em;
+    height: 2.3em;
+    padding: 0 0.4em;
+    border-radius: 0.5em;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgb(40 30 10 / 0.12),
+      0 0.18em 0 rgb(40 30 10 / 0.14),
+      0 0.6em 1.2em -0.4em rgb(70 45 10 / 0.3);
+    font-size: 1.05em;
+    font-weight: 500;
+    color: #333;
+  }
+
+  /* Capture */
+  .cp-src {
+    top: 5.4em;
+    padding: 1.3em 1.4em 1.4em;
+  }
+  .cp-src .cp-keys {
+    top: auto;
+    bottom: -3.3em;
+  }
+  .cp-src-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .cp-scene .cp-src-body {
+    margin-top: 0.45em;
+    font-size: 1em;
+    line-height: 1.6;
+    color: #2b2b2d;
+  }
+  .cp-sel {
+    background: linear-gradient(#b4d5fe, #b4d5fe) no-repeat 0 0 / 100% 100%;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .cp-src-dim {
+    color: #9a9a9f;
+  }
+  .cp-caret-anchor {
+    position: relative;
+    display: inline-block;
+    width: 0;
+    height: 1em;
+  }
+  .cp-pointer {
+    position: absolute;
+    width: 0.85em;
+    height: 1.3em;
+    fill: #111;
+    stroke: #fff;
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.25));
+  }
+  .cp-caret-anchor .cp-pointer {
+    left: 0.15em;
+    top: 0.05em;
+  }
+  .cp-hud {
+    position: absolute;
+    left: 0.9em;
+    top: 1.55em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.5em 0.95em 0.5em 0.8em;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.86);
+    color: #fff;
+    font-size: 0.95em;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    box-shadow: 0 0.5em 1.2em -0.3em rgb(0 0 0 / 0.35);
+    transform-origin: 0 50%;
+  }
+  .cp-hud-ast {
+    width: 0.95em;
+    height: 0.95em;
+    color: var(--cp-accent-bright);
+  }
+
+  /* Organize: the pointer that drags the note. */
+  .cp-grab {
+    position: absolute;
+    right: 2.6em;
+    top: 0.9em;
+    opacity: 0;
+  }
+
+  /* Hand off */
+  .cp-chat {
+    top: 21.5em;
+    left: -0.6em;
+    width: 19.4em;
+  }
+  .cp-chat-body {
+    padding: 0.4em 0.9em 0.9em;
+  }
+  .cp-chat-hello {
+    padding: 0.2em 0.2em 0.9em;
+    font-family: var(--font-serif);
+    font-size: 1.15em;
+    color: #3a3a3c;
+    text-align: center;
+  }
+  .cp-msg {
+    padding: 0.8em 0.9em 0.6em;
+    border-radius: 1em;
+    box-shadow:
+      0 0 0 1px rgb(0 0 0 / 0.1),
+      0 0.3em 0.8em -0.3em rgb(0 0 0 / 0.12);
+  }
+  .cp-msg-text {
+    font-size: 0.92em;
+    line-height: 1.55;
+    color: #2b2b2d;
+  }
+  .cp-msg-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5em;
+  }
+  .cp-plus {
+    display: grid;
+    place-items: center;
+    width: 1.8em;
+    height: 1.8em;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.12);
+    color: #777;
+    font-size: 0.95em;
+  }
+  .cp-send {
+    display: grid;
+    place-items: center;
+    width: 1.9em;
+    height: 1.9em;
+    border-radius: 50%;
+    background: var(--color-ink, #3a3226);
+  }
+  .cp-send svg {
+    width: 1.05em;
+    height: 1.05em;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Own it */
+  .cp-editor {
+    top: 9.5em;
+    left: -0.6em;
+    width: 19.4em;
+    background: #fcfcfb;
+  }
+  .cp-doc {
+    width: 0.85em;
+    height: 1em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    stroke-linejoin: round;
+  }
+  .cp-path {
+    padding: 0.35em 1em;
+    border-block: 1px solid rgb(0 0 0 / 0.06);
+    background: #f4f3f1;
+    font-size: 0.75em;
+    color: #8a8a8f;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .cp-path span {
+    margin-inline: 0.2em;
+  }
+  .cp-code {
+    padding: 0.85em 1.05em 1.2em;
+    font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+    font-size: 0.74em;
+    line-height: 1.6;
+    color: #333;
+  }
+  .cp-h {
+    font-weight: 700;
+    color: #1d1d1f;
+  }
+  .cp-blank {
+    height: 0.8em;
+  }
+  .cp-li {
+    padding-left: 6ch;
+    text-indent: -6ch;
+    word-break: break-word;
+  }
+  .cp-m {
+    color: #a0a0a5;
+  }
+  .cp-m em {
+    font-style: normal;
+    color: var(--cp-accent);
+  }
+  .cp-code b {
+    font-weight: 700;
+  }
+  .cp-typed {
+    display: inline-block;
+    max-width: 23ch;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: bottom;
+    text-indent: 0;
+  }
+  .cp-caret {
+    display: inline-block;
+    width: 1.5px;
+    height: 1.2em;
+    margin-left: 1px;
+    vertical-align: -0.2em;
+    background: var(--cp-accent);
+  }
+
+  /* ---------- States ---------- */
+  .cp-scene:not([data-state='capture']) [data-show='capture'],
+  .cp-scene:not([data-state='organize']) [data-show='organize'],
+  .cp-scene:not([data-state='handoff']) [data-show='handoff'],
+  .cp-scene:not([data-state='files']) [data-show='files'] {
+    display: none;
+  }
+
+  /* Organize onward: the CI question has been dragged into "For the chat". */
+  .cp-n3 {
+    order: 30;
+  }
+  .cp-scene:not([data-state='capture']) .cp-n3 {
+    order: 55;
+  }
+  .cp-scene[data-state='organize'] .cp-n3 {
+    z-index: 2;
+  }
+  .cp-scene[data-state='organize'] .cp-n3 .cp-row {
+    outline-color: var(--cp-accent);
+  }
+
+  /* Hand off onward: three notes copied and checked off. */
+  .cp-scene[data-state='handoff'] [data-done] .cp-row {
+    outline-color: var(--cp-accent);
+  }
+  .cp-scene:is([data-state='handoff'], [data-state='files']) [data-done] .cp-check {
+    background: var(--cp-accent);
+    border-color: var(--cp-accent);
+  }
+  .cp-scene:is([data-state='handoff'], [data-state='files']) [data-done] .cp-check svg {
+    opacity: 1;
+  }
+  .cp-scene:is([data-state='handoff'], [data-state='files']) [data-done] .cp-text {
+    color: #8a8a8f;
+    text-decoration-color: #8a8a8f;
+  }
+
+  /* Wide layout: panel on the right, the other windows on the left. */
+  @media (min-width: 640px) {
+    .cp-scene {
+      width: 48em;
+      height: 42.5em;
+    }
+    .cp-window {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  /* Narrow layout: the other windows float over the panel. */
+  @media (max-width: 639.98px) {
+    .cp-card {
+      left: -0.6em;
+      width: 21em;
+    }
+    .cp-src {
+      top: auto;
+      bottom: 6.4em;
+    }
+    .cp-chat {
+      top: 6.6em;
+    }
+    .cp-editor {
+      top: 6.6em;
+      left: auto;
+      right: -0.6em;
+      width: 22em;
+    }
+    .cp-chat .cp-keys {
+      top: auto;
+      bottom: -3.1em;
+      left: auto;
+      right: 0.6em;
+    }
+  }
+
+  /* ---------- Motion ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Capture */
+    .cp-scene[data-state='capture'] .cp-src {
+      animation: cp-rise 0.5s var(--cp-ease) both;
+    }
+    .cp-scene[data-state='capture'] .cp-sel {
+      animation: cp-wipe 0.75s cubic-bezier(0.4, 0, 0.6, 1) 0.35s both;
+    }
+    .cp-scene[data-state='capture'] .cp-caret-anchor .cp-pointer {
+      animation: cp-fade 0.3s 0.2s both;
+    }
+    .cp-scene[data-state='capture'] .cp-keys {
+      animation: cp-rise 0.35s var(--cp-ease) 1s both;
+    }
+    .cp-scene[data-state='capture'] .cp-key:nth-child(1) {
+      animation: cp-press 0.22s ease 1.3s;
+    }
+    .cp-scene[data-state='capture'] .cp-key:nth-child(2) {
+      animation: cp-press 0.22s ease 1.55s;
+    }
+    .cp-scene[data-state='capture'] .cp-hud {
+      animation: cp-pop 0.45s var(--cp-spring) 1.8s both;
+    }
+    .cp-scene[data-state='capture'] .cp-hud-ast {
+      animation: cp-spin 0.5s var(--cp-spring) 1.8s both;
+    }
+    .cp-scene[data-state='capture'] .cp-n0 {
+      animation: cp-grow 0.55s var(--cp-ease) 2s both;
+    }
+    .cp-scene[data-state='capture'] .cp-n0 .cp-row {
+      animation: cp-flash 1.8s ease 2s both;
+    }
+    .cp-scene[data-state='capture'] .cp-ast-svg {
+      animation: cp-spin 0.55s var(--cp-spring) 2s both;
+    }
+
+    /* Organize */
+    .cp-scene[data-state='organize'] .cp-n3 .cp-row {
+      animation:
+        cp-ring 0.2s 0.15s both,
+        cp-lift 1.5s var(--cp-ease) 0.2s both;
+    }
+    .cp-scene[data-state='organize'] .cp-grab {
+      animation: cp-grab 1.9s ease 0.05s both;
+    }
+    .cp-scene[data-state='organize'] .cp-menu {
+      animation: cp-pop 0.3s var(--cp-ease) 2.1s both;
+    }
+
+    /* Hand off */
+    .cp-scene[data-state='handoff'] [data-done] .cp-row {
+      animation: cp-ring 0.2s calc(0.3s + var(--d, 0) * 0.22s) both;
+    }
+    .cp-scene[data-state='handoff'] .cp-keys {
+      animation: cp-rise 0.35s var(--cp-ease) 1s both;
+    }
+    .cp-scene[data-state='handoff'] .cp-key {
+      animation: cp-press 0.25s ease 1.3s;
+    }
+    .cp-scene[data-state='handoff'] [data-done] .cp-check {
+      animation: cp-check-fill 0.25s ease calc(1.7s + var(--d, 0) * 0.06s) both;
+    }
+    .cp-scene[data-state='handoff'] [data-done] .cp-check svg {
+      animation: cp-check-mark 0.35s var(--cp-spring) calc(1.7s + var(--d, 0) * 0.06s) both;
+    }
+    .cp-scene[data-state='handoff'] [data-done] .cp-text {
+      animation: cp-strike 0.3s ease calc(1.75s + var(--d, 0) * 0.06s) both;
+    }
+    .cp-scene[data-state='handoff'] .cp-toast {
+      animation: cp-toast 0.3s var(--cp-ease) 1.8s both;
+    }
+    .cp-scene[data-state='handoff'] .cp-chat {
+      animation: cp-rise 0.5s var(--cp-ease) 2.3s both;
+    }
+
+    /* Own it */
+    .cp-scene[data-state='files'] .cp-editor {
+      animation: cp-rise 0.5s var(--cp-ease) 0.1s both;
+    }
+    .cp-scene[data-state='files'] .cp-typed {
+      animation: cp-type 1.15s steps(23, end) 1s both;
+    }
+    .cp-scene[data-state='files'] .cp-caret {
+      animation: cp-blink 1s steps(1) 2.3s infinite;
+    }
+    .cp-scene[data-state='files'] .cp-n6 {
+      animation: cp-grow 0.55s var(--cp-ease) 2.4s both;
+    }
+    .cp-scene[data-state='files'] .cp-n6 .cp-row {
+      animation: cp-flash 1.8s ease 2.4s both;
+    }
+  }
+
+  @keyframes cp-rise {
+    from {
+      opacity: 0;
+      translate: 0 0.8em;
+      scale: 0.97;
+    }
+  }
+  @keyframes cp-fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes cp-wipe {
+    from {
+      background-size: 0% 100%;
+    }
+  }
+  @keyframes cp-press {
+    50% {
+      translate: 0 0.14em;
+      box-shadow:
+        0 0 0 1px rgb(40 30 10 / 0.14),
+        0 0.04em 0 rgb(40 30 10 / 0.14),
+        0 0.3em 0.6em -0.4em rgb(70 45 10 / 0.3);
+      background: #f6f3ee;
+    }
+  }
+  @keyframes cp-pop {
+    0% {
+      opacity: 0;
+      scale: 0.6;
+    }
+    100% {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+  @keyframes cp-spin {
+    from {
+      rotate: -90deg;
+    }
+  }
+  @keyframes cp-grow {
+    from {
+      grid-template-rows: 0fr;
+      margin-top: calc(var(--cp-gap) * -1);
+      opacity: 0;
+    }
+  }
+  @keyframes cp-flash {
+    0%,
+    35% {
+      outline-color: rgb(217 109 0 / 0.6);
+    }
+    100% {
+      outline-color: transparent;
+    }
+  }
+  @keyframes cp-ring {
+    from {
+      outline-color: transparent;
+    }
+  }
+  @keyframes cp-lift {
+    0% {
+      scale: 1;
+      rotate: 0deg;
+    }
+    18%,
+    72% {
+      scale: 1.035;
+      rotate: -1.2deg;
+      box-shadow: 0 1em 2em -0.6em rgb(40 25 5 / 0.3);
+    }
+    100% {
+      scale: 1;
+      rotate: 0deg;
+    }
+  }
+  @keyframes cp-grab {
+    0% {
+      opacity: 0;
+      translate: 0.8em 0.6em;
+    }
+    12%,
+    80% {
+      opacity: 1;
+      translate: 0 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes cp-check-fill {
+    from {
+      background: transparent;
+      border-color: #8d8d92;
+    }
+  }
+  @keyframes cp-check-mark {
+    from {
+      opacity: 0;
+      scale: 0.3;
+    }
+  }
+  @keyframes cp-strike {
+    from {
+      color: var(--cp-ink);
+      text-decoration-color: transparent;
+    }
+  }
+  @keyframes cp-toast {
+    from {
+      opacity: 0;
+      scale: 0.9;
+    }
+  }
+  @keyframes cp-type {
+    from {
+      max-width: 0;
+    }
+  }
+  @keyframes cp-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+</style>

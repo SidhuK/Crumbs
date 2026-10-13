@@ -1,0 +1,182 @@
+---
+import Container from "@/components/container.astro";
+import Asterisk from "@/components/ui/asterisk.astro";
+import { site } from "@/site";
+
+const code = (text: string) => `<code class="faq-code">${text}</code>`;
+
+const faqs = [
+  {
+    q: "Is it free?",
+    a: `Yes, free and open source, with no account to make. The code is <a href="${site.repo}">on GitHub</a>.`,
+  },
+  {
+    q: "Where do my notes live?",
+    a: `In plain Markdown files in a folder you pick, ${code("~/Library/Application Support/Crumbs/")} by default. Nothing leaves your Mac.`,
+  },
+  {
+    q: "Why does it want Accessibility access?",
+    a: `To notice the double tap and ask the app in front to copy your selection. It never reads other apps' windows.`,
+  },
+  {
+    q: "Does it touch my clipboard?",
+    a: `Only for a moment. Crumbs saves what's there, copies your selection, then puts it back the way it was.`,
+  },
+  {
+    q: "Which Macs does it run on?",
+    a: `${site.requirements}. The capture key is Shift, or Command, Option or Control if you prefer.`,
+  },
+];
+---
+
+<section id="faq" aria-labelledby="faq-heading" class="py-24 md:py-32">
+  <Container class="md:px-10">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-4">
+        <div class="lg:sticky lg:top-24">
+          <p class="flex items-center gap-2 font-mono text-xs text-muted">
+            <Asterisk class="size-2.5 text-amber" />faq
+          </p>
+          <h2 id="faq-heading" class="faq-heading mt-5">Fair questions.</h2>
+          <p class="mt-6 max-w-xs text-[16px] leading-relaxed text-ink-soft">
+            Something else on your mind?{" "}
+            <a href={site.issues} class="faq-link">Ask on GitHub</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="lg:col-span-8">
+        <div class="border-t border-line">
+          {
+            faqs.map((item, i) => (
+              <details class="faq group border-b border-line" open={i === 0}>
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-left">
+                  <h3 class="text-[17px] leading-snug font-medium text-ink">{item.q}</h3>
+                  <span class="sign" aria-hidden="true">
+                    <span class="sign-h" />
+                    <span class="sign-v" />
+                  </span>
+                </summary>
+                <div class="faq-body -mt-1 max-w-[60ch] pr-10 pb-7 text-[15px] leading-relaxed text-ink-soft">
+                  <p set:html={item.a} />
+                </div>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .faq-heading {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary {
+    border-radius: 0.4rem;
+  }
+
+  summary:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 4px;
+  }
+
+  summary:hover h3 {
+    color: var(--color-ink-soft);
+  }
+
+  .sign {
+    position: relative;
+    width: 0.9rem;
+    height: 0.9rem;
+    flex-shrink: 0;
+    color: var(--color-ink);
+  }
+
+  .sign-h,
+  .sign-v {
+    position: absolute;
+    background: currentColor;
+    border-radius: 1px;
+  }
+
+  .sign-h {
+    left: 0;
+    right: 0;
+    top: calc(50% - 0.75px);
+    height: 1.5px;
+  }
+
+  .sign-v {
+    top: 0;
+    bottom: 0;
+    left: calc(50% - 0.75px);
+    width: 1.5px;
+    transition: transform 0.2s ease;
+  }
+
+  details[open] .sign-v {
+    transform: scaleY(0);
+  }
+
+  .faq-link,
+  .faq-body :global(a) {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-faint);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    border-radius: 2px;
+    transition: text-decoration-color 0.15s ease;
+  }
+
+  .faq-link:hover,
+  .faq-body :global(a:hover) {
+    text-decoration-color: var(--color-amber);
+  }
+
+  .faq-link:focus-visible,
+  .faq-body :global(a:focus-visible) {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
+  }
+
+  .faq-body :global(.faq-code) {
+    border-radius: 0.3rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    padding: 0.05em 0.35em;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.85em;
+    color: var(--color-ink);
+    overflow-wrap: anywhere;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    details[open] .faq-body {
+      animation: faq-in 0.25s ease-out;
+    }
+  }
+
+  @keyframes faq-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

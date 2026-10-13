@@ -1,0 +1,81 @@
+---
+import { Icon } from "astro-icon/components";
+import { site } from "@/site";
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<a href={site.repo} class:list={["btn-star group", className]}>
+  <Icon name="simple-icons:github" class="size-[1.05em]" aria-hidden="true" />
+  <span>Star on GitHub</span>
+  <span class="btn-star-icon" aria-hidden="true">
+    <Icon name="bx:star" class="btn-star-outline" />
+    <Icon name="bx:bxs-star" class="btn-star-solid" />
+  </span>
+</a>
+
+<style is:global>
+  .btn-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-line);
+    background: #fff;
+    color: var(--color-ink);
+    padding: calc(0.8rem - 1px) 1.25rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px oklch(0.3 0.02 81.53 / 0.06);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .btn-star:hover {
+    border-color: var(--color-faint);
+    box-shadow: 0 2px 8px oklch(0.3 0.02 81.53 / 0.08);
+  }
+  .btn-star:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
+  }
+  .btn-star-icon {
+    position: relative;
+    display: inline-grid;
+    width: 1.1em;
+    height: 1.1em;
+    margin-left: 0.1rem;
+    padding-left: 0.65rem;
+    box-sizing: content-box;
+    border-left: 1px solid var(--color-line);
+  }
+  .btn-star-icon svg {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+  }
+  .btn-star-outline {
+    color: var(--color-muted);
+  }
+  .btn-star-solid {
+    color: var(--color-amber-bright);
+    opacity: 0;
+    scale: 0.4;
+    transition:
+      opacity 0.15s ease,
+      scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .btn-star:hover .btn-star-solid,
+  .btn-star:focus-visible .btn-star-solid {
+    opacity: 1;
+    scale: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-star-solid {
+      transition: opacity 0.15s ease;
+      scale: 1;
+    }
+  }
+</style>

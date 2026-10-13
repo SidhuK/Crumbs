@@ -1,0 +1,52 @@
+---
+// Decorative amber dithered "cloud" layer. Fills its nearest positioned parent and has no
+// layout impact. The PNGs are drawn on a 3 px dot grid at 1 image px = 1 CSS px, so they
+// stay crisp; the CSS mask fades whatever part of them the parent crops.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<div
+  aria-hidden="true"
+  class:list={["dither-cloud pointer-events-none absolute inset-0 overflow-hidden select-none", className]}>
+  <div class="dither-cloud__layer"></div>
+</div>
+
+<style>
+  .dither-cloud {
+    container-type: inline-size;
+    mask-image: radial-gradient(ellipse 58% 58% at 50% 50%, #000 62%, transparent 100%);
+  }
+
+  .dither-cloud__layer {
+    position: absolute;
+    inset: 0 -12px;
+    background: url("/images/dither-cloud.png") center / 960px 816px no-repeat;
+    image-rendering: pixelated;
+  }
+
+  @container (max-width: 560px) {
+    .dither-cloud__layer {
+      background-image: url("/images/dither-cloud-narrow.png");
+      background-size: 480px 600px;
+    }
+  }
+
+  /* Drift in whole 3 px dot steps so the grid never lands between pixels and blurs. */
+  @media (prefers-reduced-motion: no-preference) {
+    .dither-cloud__layer {
+      animation: dither-cloud-drift 90s steps(8) infinite alternate;
+    }
+  }
+
+  @keyframes dither-cloud-drift {
+    from {
+      translate: -12px 0;
+    }
+    to {
+      translate: 12px 0;
+    }
+  }
+</style>

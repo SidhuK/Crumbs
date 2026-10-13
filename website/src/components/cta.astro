@@ -1,0 +1,40 @@
+---
+import Container from "@/components/container.astro";
+import Asterisk from "@/components/ui/asterisk.astro";
+import StarButton from "@/components/ui/star-button.astro";
+import { site } from "@/site";
+---
+
+<section id="download" aria-labelledby="cta-title" class="py-28 md:py-44">
+  <Container class="flex flex-col items-center text-center">
+    <!-- The pixel asterisk doubles as a footnote mark, and the footnote is the how-to. -->
+    <h2
+      id="cta-title"
+      class="font-serif text-[2.25rem] leading-[1.1] text-balance font-medium tracking-[-0.02em] text-ink sm:text-5xl md:text-[3.5rem]">
+      Keep the good bits<Asterisk class="cta-mark ml-[0.06em] inline-block size-[0.36em] text-amber" />
+    </h2>
+
+    <div class="mt-6 space-y-1 text-base text-muted md:text-[17px]">
+      <p>
+        <Asterisk class="mr-1 inline-block size-[0.6em] -translate-y-[0.12em] text-amber" />Select
+        text, tap Shift twice, keep reading.
+      </p>
+      <p>Free and open source, for {site.requirements}.</p>
+    </div>
+
+    <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row">
+      <a href={site.releases} class="btn-ink">
+        Download for Mac <span aria-hidden="true">→</span>
+      </a>
+      <StarButton />
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Superscript like a footnote mark, without changing the line box. */
+  .cta-mark {
+    vertical-align: baseline;
+    translate: 0 -0.36em;
+  }
+</style>

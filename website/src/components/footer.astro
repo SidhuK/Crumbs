@@ -1,0 +1,65 @@
+---
+import { Icon } from "astro-icon/components";
+import Container from "@/components/container.astro";
+import { site } from "@/site";
+
+const links = [
+  { label: "GitHub", href: site.repo },
+  { label: "Releases", href: site.releases },
+  { label: "Report an issue", href: site.issues },
+];
+
+// "Crumbs" traced from Geist Pixel on its own pixel grid (one unit = one font pixel), so the
+// wordmark scales to any width through the viewBox and never waits on the web font.
+const wordmark =
+  "M5 0h6v1H5zM65 0h2v1H65zM3 1h11v1H3zM65 1h2v1H65zM2 2h3v1H2zM12 2h3v1H12zM65 2h2v1H65zM2 3h2v1H2zM13 3h2v1H13zM65 3h2v1H65zM1 4h2v1H1zM14 4h2v1H14zM65 4h2v1H65zM1 5h2v1H1zM14 5h2v1H14zM19 5h4v1H19zM25 5h3v1H25zM31 5h2v1H31zM39 5h2v1H39zM45 5h2v1H45zM49 5h3v1H49zM55 5h4v1H55zM65 5h2v1H65zM69 5h5v1H69zM81 5h7v1H81zM0 6h2v1H0zM14 6h2v1H14zM19 6h4v1H19zM24 6h4v1H24zM31 6h2v1H31zM39 6h2v1H39zM45 6h2v1H45zM48 6h5v1H48zM54 6h6v1H54zM65 6h2v1H65zM68 6h7v1H68zM80 6h9v1H80zM0 7h2v1H0zM21 7h3v1H21zM31 7h2v1H31zM39 7h2v1H39zM45 7h3v1H45zM51 7h3v1H51zM58 7h3v1H58zM65 7h3v1H65zM73 7h3v1H73zM80 7h2v1H80zM88 7h2v1H88zM0 8h2v1H0zM21 8h2v1H21zM31 8h2v1H31zM39 8h2v1H39zM45 8h2v1H45zM52 8h2v1H52zM59 8h2v1H59zM65 8h3v1H65zM74 8h2v1H74zM79 8h2v1H79zM88 8h2v1H88zM0 9h2v1H0zM21 9h2v1H21zM31 9h2v1H31zM39 9h2v1H39zM45 9h2v1H45zM52 9h2v1H52zM59 9h2v1H59zM65 9h2v1H65zM75 9h2v1H75zM79 9h2v1H79zM0 10h2v1H0zM21 10h2v1H21zM31 10h2v1H31zM39 10h2v1H39zM45 10h2v1H45zM52 10h2v1H52zM59 10h2v1H59zM65 10h2v1H65zM75 10h2v1H75zM80 10h2v1H80zM0 11h2v1H0zM21 11h2v1H21zM31 11h2v1H31zM39 11h2v1H39zM45 11h2v1H45zM52 11h2v1H52zM59 11h2v1H59zM65 11h2v1H65zM75 11h2v1H75zM80 11h6v1H80zM0 12h2v1H0zM14 12h2v1H14zM21 12h2v1H21zM31 12h2v1H31zM39 12h2v1H39zM45 12h2v1H45zM52 12h2v1H52zM59 12h2v1H59zM65 12h2v1H65zM75 12h2v1H75zM82 12h7v1H82zM1 13h2v1H1zM14 13h2v1H14zM21 13h2v1H21zM31 13h2v1H31zM39 13h2v1H39zM45 13h2v1H45zM52 13h2v1H52zM59 13h2v1H59zM65 13h2v1H65zM75 13h2v1H75zM86 13h4v1H86zM1 14h2v1H1zM14 14h2v1H14zM21 14h2v1H21zM31 14h2v1H31zM39 14h2v1H39zM45 14h2v1H45zM52 14h2v1H52zM59 14h2v1H59zM65 14h2v1H65zM75 14h2v1H75zM88 14h2v1H88zM2 15h2v1H2zM13 15h2v1H13zM21 15h2v1H21zM31 15h2v1H31zM39 15h2v1H39zM45 15h2v1H45zM52 15h2v1H52zM59 15h2v1H59zM65 15h3v1H65zM74 15h2v1H74zM79 15h2v1H79zM88 15h2v1H88zM2 16h3v1H2zM12 16h3v1H12zM21 16h2v1H21zM31 16h3v1H31zM38 16h3v1H38zM45 16h2v1H45zM52 16h2v1H52zM59 16h2v1H59zM65 16h3v1H65zM73 16h3v1H73zM79 16h3v1H79zM88 16h2v1H88zM3 17h11v1H3zM19 17h7v1H19zM32 17h6v1H32zM39 17h2v1H39zM45 17h2v1H45zM52 17h2v1H52zM59 17h2v1H59zM65 17h2v1H65zM68 17h7v1H68zM80 17h9v1H80zM5 18h6v1H5zM19 18h7v1H19zM33 18h4v1H33zM39 18h2v1H39zM45 18h2v1H45zM52 18h2v1H52zM59 18h2v1H59zM65 18h2v1H65zM69 18h5v1H69zM81 18h7v1H81z";
+
+// Same 9×9 asterisk as components/ui/asterisk.astro.
+const asterisk =
+  "M1 0h2v2H1zM6 0h2v2H6zM2 2h2v1H2zM5 2h2v1H5zM3 3h3v1H3zM0 4h9v1H0zM3 5h3v1H3zM2 6h2v1H2zM5 6h2v1H5zM1 7h2v2H1zM6 7h2v2H6z";
+
+const year = 2026;
+---
+
+<footer class="overflow-hidden">
+  <Container>
+    <svg
+      viewBox="0 0 101 19"
+      shape-rendering="crispEdges"
+      aria-hidden="true"
+      focusable="false"
+      class="block h-auto w-full select-none">
+      <path d={wordmark} class="fill-line"></path>
+      <path d={asterisk} transform="translate(92 0)" class="fill-hl-amber"></path>
+    </svg>
+
+    <div
+      class="flex flex-col gap-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between md:py-10">
+      <nav aria-label="Footer">
+        <ul class="flex flex-wrap gap-x-6 gap-y-2">
+          {
+            links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="rounded-sm transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <p>&copy; {year} {site.name}</p>
+        <a
+          href={site.repo}
+          aria-label="Crumbs on GitHub"
+          class="rounded-sm transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber">
+          <Icon name="simple-icons:github" class="size-4" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </Container>
+</footer>

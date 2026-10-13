@@ -17,6 +17,10 @@ It's made for collecting questions and snippets while you read, then sending the
 
 Your notes are plain Markdown files on your disk. There's no account and no sync service, and nothing leaves your Mac.
 
+<p align="center">
+  <img src="docs/images/demo.gif" width="720" alt="Screen recording: text is selected in a chat, on a web page and in a README, and each selection appears as a note in the Crumbs panel after tapping Shift twice">
+</p>
+
 ## Contents
 
 - [What it looks like](#what-it-looks-like)

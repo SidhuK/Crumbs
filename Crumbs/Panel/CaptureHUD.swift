@@ -10,9 +10,14 @@ final class CaptureHUD {
     private var window: NSPanel?
     private var dismissTask: Task<Void, Never>?
 
-    func show(_ message: LocalizedStringResource, systemImage: String) {
+    enum Icon {
+        case asterisk
+        case symbol(String)
+    }
+
+    func show(_ message: LocalizedStringResource, icon: Icon) {
         AccessibilityNotification.Announcement(String(localized: message)).post()
-        let hosting = NSHostingView(rootView: HUDPill(message: message, systemImage: systemImage))
+        let hosting = NSHostingView(rootView: HUDPill(message: message, icon: icon))
         let size = hosting.fittingSize
         let window = self.window ?? makeWindow()
         window.contentView = hosting
@@ -69,22 +74,55 @@ final class CaptureHUD {
     }
 }
 
-private struct HUDPill: View {
+struct HUDPill: View {
     let message: LocalizedStringResource
-    let systemImage: String
+    let icon: CaptureHUD.Icon
 
     var body: some View {
         Label {
             Text(message)
         } icon: {
-            Image(systemName: systemImage)
+            switch icon {
+            case .asterisk:
+                PoppingAsterisk()
+            case .symbol(let name):
+                Image(systemName: name)
+            }
         }
             .font(.system(size: 12, weight: .semibold))
             .foregroundStyle(.white)
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
             .background(.black.opacity(0.85), in: .capsule)
+            // The pill is always dark, so resolve the accent's bright dark-mode variant.
+            .environment(\.colorScheme, .dark)
             .padding(4)
             .fixedSize()
     }
 }
+
+/// The brand asterisk, popping in with a quarter turn each time the pill appears.
+private struct PoppingAsterisk: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isShown = false
+
+    var body: some View {
+        PixelAsterisk()
+            .fill(Brand.accent)
+            .frame(width: 12, height: 12)
+            .scaleEffect(isShown || reduceMotion ? 1 : 0.4)
+            .rotationEffect(.degrees(isShown || reduceMotion ? 0 : -90))
+            .animation(.spring(duration: 0.45, bounce: 0.5), value: isShown)
+            .onAppear { isShown = true }
+    }
+}
+
+#if DEBUG
+#Preview("Captured") {
+    VStack(spacing: 8) {
+        HUDPill(message: "Captured", icon: .asterisk)
+        HUDPill(message: "Nothing Selected", icon: .symbol("text.cursor"))
+    }
+    .padding()
+}
+#endif

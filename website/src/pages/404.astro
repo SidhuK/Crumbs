@@ -1,0 +1,53 @@
+---
+import Container from "@/components/container.astro";
+import Asterisk from "@/components/ui/asterisk.astro";
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="Page not found">
+  <section class="py-24 md:py-32">
+    <Container>
+      <div class="flex min-h-[calc(100vh-20rem)] flex-col items-center justify-center text-center">
+        <div class="relative" aria-hidden="true">
+          <Asterisk class="crumb block size-20 text-amber md:size-24" />
+          <span
+            class="absolute top-1/2 left-full ml-4 hidden w-max -translate-y-3/4 -rotate-6 font-hand text-[1.45rem] leading-none font-medium tracking-[0.01em] text-ink-soft sm:block">
+            <svg viewBox="0 0 48 24" class="mb-1 block h-5 w-10 text-ink-soft" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M46 14C34 4 18 4 4 13"></path>
+              <path d="M10 6 4 13l8 3"></path>
+            </svg>
+            the last crumb
+          </span>
+        </div>
+
+        <p class="mt-10 font-mono text-xs text-muted">error 404</p>
+        <h1
+          class="mt-4 max-w-[16ch] font-serif text-[2.6rem] leading-[1.08] font-medium tracking-[-0.02em] text-balance text-ink md:text-[3.9rem]">
+          This page got swept up.
+        </h1>
+        <p class="mt-6 max-w-sm text-[16px] leading-relaxed text-ink-soft">
+          The link might be old, or it has a typo. Everything else is right where you left it.
+        </p>
+        <a href="/" class="btn-ink mt-10">Back home <span aria-hidden="true">→</span></a>
+      </div>
+    </Container>
+  </section>
+</Layout>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .crumb {
+      animation: wobble 6s ease-in-out infinite;
+    }
+  }
+
+  @keyframes wobble {
+    0%,
+    100% {
+      transform: rotate(0);
+    }
+    50% {
+      transform: rotate(90deg);
+    }
+  }
+</style>

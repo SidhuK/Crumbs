@@ -29,6 +29,7 @@ struct PanelRootView: View {
             ToastOverlay()
                 .padding(.bottom, 92)
         }
+        .tint(Brand.accent)
         .animation(.smooth(duration: 0.25), value: permission.isTrusted)
         .onChange(of: model.focusRequest) {
             focus = model.focusRequest.field
@@ -49,6 +50,7 @@ private struct ToastOverlay: View {
                     Text(toast.message)
                 } icon: {
                     Image(systemName: toast.systemImage)
+                        .foregroundStyle(.tint)
                 }
                 .font(.system(size: 12, weight: .medium))
                 .padding(.horizontal, 14)

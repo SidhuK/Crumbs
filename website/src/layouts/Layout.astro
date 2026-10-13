@@ -1,0 +1,49 @@
+---
+import { SEO } from "astro-seo";
+import Footer from "@/components/footer.astro";
+import { site } from "@/site";
+import "@fontsource-variable/inter/index.css";
+import "@fontsource-variable/besley/index.css";
+import "@fontsource/instrument-serif/400.css";
+import "@fontsource/instrument-serif/400-italic.css";
+import "@fontsource-variable/caveat/index.css";
+import "../styles/global.css";
+
+export interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = new URL("/images/og.png", Astro.site).toString();
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name}: save text from any app on your Mac`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/images/app-icon.png" />
+    <link rel="preload" href="/fonts/GeistPixel.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="generator" content={Astro.generator} />
+    <SEO
+      title={fullTitle}
+      description={site.description}
+      canonical={canonicalURL}
+      twitter={{ card: "summary_large_image" }}
+      openGraph={{
+        basic: { url: canonicalURL, type: "website", title: fullTitle, image: ogImage },
+        image: { alt: "The Crumbs panel next to the Crumbs app icon" },
+      }}
+    />
+  </head>
+  <body class="font-sans">
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -63,6 +63,8 @@ final class PanelModel {
     private(set) var scrollRequest: ScrollRequest?
     private(set) var toast: PanelToast?
     private(set) var flashedNoteID: Note.ID?
+    /// Counts captures this session, so the header can react to each one.
+    private(set) var captureCount = 0
 
     @ObservationIgnored private var anchorID: Note.ID?
     @ObservationIgnored private var cursorID: Note.ID?
@@ -426,6 +428,7 @@ final class PanelModel {
 
     func didCapture(_ text: String) {
         guard let id = store.addNote(text) else { return }
+        captureCount += 1
         scroll(to: id)
         flash(id)
     }

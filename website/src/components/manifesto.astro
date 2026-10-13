@@ -1,0 +1,605 @@
+---
+import { Icon } from "astro-icon/components";
+import Asterisk from "@/components/ui/asterisk.astro";
+---
+
+<section id="manifesto" aria-labelledby="manifesto-title" class="manifesto relative overflow-hidden">
+  <div class="paper grid-paper" aria-hidden="true"></div>
+
+  <div class="floaters" aria-hidden="true">
+    <div class="float at-left mini-panel" style="--w: 20em; --gap: 4.5rem; --y: 12.5rem; --r: -2deg; --d: 19s;">
+      <p class="mp-wordmark">Crumbs<Asterisk class="mp-ast" /></p>
+      <div class="mp-searchrow">
+        <span class="mp-search">
+          <svg viewBox="0 0 16 16" class="mp-search-icon"
+            ><circle cx="6.8" cy="6.8" r="4.9" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path
+              d="M10.4 10.4 14 14"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"></path></svg
+          >Search
+        </span>
+        <span class="mp-more"
+          ><svg viewBox="0 0 16 4"
+            ><circle cx="2" cy="2" r="1.6"></circle><circle cx="8" cy="2" r="1.6"></circle><circle
+              cx="14"
+              cy="2"
+              r="1.6"></circle></svg
+          ></span
+        >
+      </div>
+      <p class="mp-sec"><span>Research</span><i></i></p>
+      <div class="mp-row">
+        <span class="mp-check"></span>
+        <p><b>Negation in inherited configs.</b> The moment a config can extend a base...</p>
+      </div>
+      <div class="mp-row">
+        <span class="mp-check"></span>
+        <p>Use <b>TOML</b> as the default format, backed by a schema.</p>
+      </div>
+    </div>
+
+    <div class="float at-right hud" style="--w: 9em; --gap: 6rem; --y: 20rem; --r: 3deg; --d: 15s;">
+      <svg viewBox="0 0 16 24" class="hud-pointer"><path d="M1.5 1.5v18.2l4.4-4.2 2.9 6.7 2.9-1.3-2.9-6.6h6.2z"></path></svg>
+      <span class="hud-pill"><Asterisk class="hud-ast" />Captured</span>
+    </div>
+
+    <div class="float at-right mp-card" style="--w: 17em; --gap: 7.5rem; --y: 38rem; --r: 2deg; --d: 23s;">
+      <div class="mp-row">
+        <span class="mp-check"></span>
+        <p><code>git rebase --onto main old-base</code> before the review</p>
+      </div>
+    </div>
+
+    <div class="float at-left mini-panel" style="--w: 19em; --gap: 6rem; --y: 54rem; --r: -1.5deg; --d: 21s;">
+      <p class="mp-sec mp-sec-first"><span>For the chat</span><i></i></p>
+      <div class="mp-row is-done">
+        <span class="mp-check"><svg viewBox="0 0 12 12"><path d="M3.2 6.3 5.2 8.3 8.9 4.2"></path></svg></span>
+        <p>How should config migrations work?</p>
+      </div>
+      <div class="mp-row is-done">
+        <span class="mp-check"><svg viewBox="0 0 12 12"><path d="M3.2 6.3 5.2 8.3 8.9 4.2"></path></svg></span>
+        <p>Should plugins own their schema?</p>
+      </div>
+      <p class="mp-toast">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"></circle><path d="M4.6 8.3 7 10.6l4.4-5"></path></svg>
+        Copied as List
+      </p>
+    </div>
+
+    <div class="float at-right mp-card" style="--w: 16em; --gap: 4.5rem; --y: 72rem; --r: -2.5deg; --d: 25s;">
+      <div class="mp-row">
+        <span class="mp-check"></span>
+        <p>Lisbon: the <span class="mp-link">tram 28 tip</span> from that thread</p>
+      </div>
+    </div>
+
+    <div class="float at-left keys" style="--w: 6em; --gap: 8rem; --y: 84rem; --r: 2deg; --d: 17s;">
+      <span>⇧</span><span>⇧</span>
+    </div>
+  </div>
+
+  <div class="sheet">
+    <h2 id="manifesto-title" class="title font-serif">Your notes app is too far away.</h2>
+
+    <p>
+      You're reading something. A{" "}
+      <span class="app"><span aria-hidden="true" class="chip chip-web"><Icon name="bx:compass" /></span><span class="hand">web page</span></span>,
+      a{" "}
+      <span class="app"><span aria-hidden="true" class="chip chip-pdf"><Icon name="bx:bxs-file-pdf" /></span><span class="hand">PDF</span></span>,
+      a{" "}
+      <span class="app"><span aria-hidden="true" class="chip chip-term"><Icon name="bx:terminal" /></span><span class="hand">terminal</span></span>,
+      a long{" "}
+      <span class="app"><span aria-hidden="true" class="chip chip-chat"><Icon name="bx:bxs-message-rounded-dots" /></span><span class="hand">chat</span></span>.
+      Then a line jumps out. <span class="hl">You'll want it later.</span>
+    </p>
+
+    <p>
+      Saving it means switching apps, pasting, and{" "}
+      <span class="wavy">finding your place again</span>. So you skip it and tell yourself you'll remember.{" "}
+      <span class="hand">You won't.</span>
+    </p>
+
+    <blockquote class="pull font-quote">
+      <p>“Save it the second you see it.”</p>
+    </blockquote>
+
+    <p>
+      Crumbs lives in your menu bar. Select the text, tap <kbd class="kbd"><span aria-hidden="true">⇧</span><span class="sr-only">Shift</span></kbd> <kbd class="kbd"><span aria-hidden="true">⇧</span><span class="sr-only">Shift</span></kbd>, and
+      keep going. It lands in a floating panel that <span class="hl">never steals focus</span>. Bold, links, code and
+      lists come along as Markdown, and your clipboard is put back. Or type one, or paste with{" "}
+      <kbd class="kbd"><span aria-hidden="true">⌘V</span><span class="sr-only">Command V</span></kbd>.
+    </p>
+
+    <p>
+      By evening you have a <span class="hand">pile of crumbs</span>, one list per project. Sections, search,
+      drag, merge, undo.
+    </p>
+
+    <blockquote class="pull font-quote">
+      <p>“Collect now. Sort it out later.”</p>
+    </blockquote>
+
+    <p>
+      When it's time, select a few and press <kbd class="kbd"><span aria-hidden="true">⇧⌘C</span><span class="sr-only">Shift Command C</span></kbd>. They copy as a numbered
+      list for your chat and <span class="hl hl-green">get checked off</span>.
+    </p>
+
+    <p>
+      Each list is a plain Markdown file in a folder you pick. Edit it anywhere, even while Crumbs runs.{" "}
+      <span class="hl hl-amber">No account, no sync service, nothing leaves your Mac.</span>
+    </p>
+
+    <div class="sign">
+      <p class="sign-hand"><span class="font-hand">Happy collecting,</span></p>
+      <p class="sign-name">
+        <Asterisk class="size-4 text-amber" />
+        <span>the Crumbs folks</span>
+      </p>
+      <p class="reqs font-mono">
+        <span>macOS 27+</span> · <span>Accessibility access</span> ·{" "}
+        <span>capture key <span aria-hidden="true">⇧/⌘/⌥/⌃</span><span class="sr-only">Shift, Command, Option or Control</span></span> ·{" "}
+        <span><span aria-hidden="true">⌃⌥C</span><span class="sr-only">Control Option C</span> toggles the panel</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    --rule: 26px;
+    --fs: 16px;
+    --col: 100%;
+    --margin-x: 1.75rem;
+    --gutter: 1rem;
+    /* Puts the first rule a pixel under the body text baseline (Inter ascent 0.969, content 1.21em). */
+    --shift: calc(var(--rule) * -0.5 + var(--fs) * 0.364 + 1px);
+    font-size: var(--fs);
+    line-height: var(--rule);
+    color: var(--color-ink-soft);
+  }
+  @media (min-width: 768px) {
+    .manifesto {
+      --rule: 30px;
+      --fs: 17px;
+      --col: 32.5rem;
+      --margin-x: max(1.75rem, calc(50% - var(--col) / 2 - 5rem));
+    }
+  }
+
+  .paper {
+    --grid-x: calc(var(--margin-x) + var(--gutter));
+    --grid-y: var(--shift);
+    position: absolute;
+    inset: 0;
+    mask-image: linear-gradient(to bottom, transparent, #000 calc(var(--rule) * 3), #000 calc(100% - var(--rule) * 6), transparent);
+  }
+
+  .sheet {
+    position: relative;
+    padding-block: calc(var(--rule) * 4) calc(var(--rule) * 5);
+  }
+  .sheet > :where(:not(.pull)) {
+    margin-left: calc(var(--margin-x) + var(--gutter));
+    margin-right: 1.25rem;
+    max-width: var(--col);
+  }
+  @media (min-width: 768px) {
+    .sheet > :where(:not(.pull)) {
+      margin-right: 0;
+    }
+  }
+  .sheet > * + * {
+    margin-top: var(--rule);
+  }
+
+  .title {
+    font-weight: 500;
+    font-size: 34px;
+    line-height: calc(var(--rule) * 2);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin-bottom: var(--rule);
+    position: relative;
+    top: 2px;
+    text-wrap: balance;
+  }
+  @media (min-width: 768px) {
+    .title {
+      font-size: 52px;
+      letter-spacing: -0.025em;
+      top: 4px;
+    }
+  }
+
+  /* Inline pieces must stay inside the line box so every line keeps landing on a rule. */
+  .hand {
+    display: inline-block;
+    font-family: var(--font-hand);
+    font-size: 1.3em;
+    font-weight: 500;
+    line-height: 0;
+    color: var(--color-ink);
+    transform: rotate(-1deg);
+    padding-inline: 0.04em;
+  }
+  .app {
+    white-space: nowrap;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 0.2em;
+    border-radius: 0.28em;
+    color: #fff;
+    vertical-align: -0.16em;
+    line-height: 0;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.06);
+  }
+  .chip :global(svg) {
+    width: 0.78em;
+    height: 0.78em;
+  }
+  .chip-web {
+    background: oklch(0.62 0.15 245);
+  }
+  .chip-pdf {
+    background: oklch(0.6 0.19 27);
+  }
+  .chip-term {
+    background: var(--color-ink);
+  }
+  .chip-chat {
+    background: oklch(0.68 0.15 150);
+  }
+
+  .wavy {
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: var(--color-amber);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 5px;
+    text-decoration-skip-ink: none;
+  }
+  .wavy-soft {
+    text-decoration-color: var(--color-amber-bright);
+  }
+
+  .manifesto :global(.kbd) {
+    line-height: 1.2;
+  }
+
+  .pull {
+    margin-block: calc(var(--rule) * 2);
+    padding-left: calc(var(--margin-x) + var(--gutter));
+    padding-right: 1.25rem;
+    text-align: center;
+    font-style: italic;
+    font-size: 28px;
+    line-height: calc(var(--rule) * 2);
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+  .pull p {
+    position: relative;
+    top: 3px;
+  }
+  @media (min-width: 768px) {
+    .pull {
+      padding: 0;
+      margin-left: max(1rem, calc(var(--margin-x) + var(--gutter) - 5rem));
+      width: calc(var(--col) + 10rem);
+      max-width: calc(100% - 2rem);
+      font-size: 34px;
+    }
+  }
+
+  .sign {
+    margin-top: calc(var(--rule) * 2);
+  }
+  /* Same trick as .hand: a zero line-height inline block shares the body baseline, so it sits on a grid line. */
+  .sign-hand span {
+    display: inline-block;
+    font-size: 1.75em;
+    font-weight: 500;
+    line-height: 0;
+    color: var(--color-ink);
+    transform: rotate(-1.5deg);
+    transform-origin: left center;
+  }
+  .sign-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--rule);
+    height: var(--rule);
+    font-size: 13px;
+    color: var(--color-muted);
+  }
+
+  .reqs {
+    margin-top: var(--rule);
+    font-size: 10.5px;
+    line-height: var(--rule);
+    color: var(--color-muted);
+    position: relative;
+    top: -1px;
+  }
+  .reqs > span {
+    white-space: nowrap;
+  }
+
+  /* Small Crumbs UI cards stuck on the paper in the margins. */
+  .floaters {
+    display: none;
+  }
+  @media (min-width: 1200px) {
+    .floaters {
+      display: block;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      user-select: none;
+    }
+  }
+  .float {
+    --sticker-shadow:
+      0 0 0 1px rgb(40 30 10 / 0.07),
+      0 1px 2px rgb(40 30 10 / 0.06),
+      0 1.2em 2.4em -1.1em rgb(70 45 10 / 0.32);
+    position: absolute;
+    top: var(--y);
+    width: var(--w);
+    transform: rotate(var(--r));
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', Inter, system-ui, sans-serif;
+    font-size: clamp(10.5px, 0.84vw, 12px);
+    line-height: 1.45;
+    letter-spacing: -0.003em;
+    color: #1d1d1f;
+    animation: drift var(--d) ease-in-out infinite alternate;
+  }
+  /* Cards keep a fixed distance from the text column and never cross it, even at 1200px. */
+  .at-left {
+    left: max(1rem, calc(var(--margin-x) + var(--gutter) - var(--gap) - var(--w)));
+  }
+  .at-right {
+    left: calc(var(--margin-x) + var(--gutter) + var(--col) + var(--gap));
+  }
+  @keyframes drift {
+    to {
+      transform: translate(10px, -16px) rotate(calc(var(--r) + 1.2deg));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .float {
+      animation: none;
+    }
+  }
+
+  .float b {
+    font-weight: 650;
+  }
+  .float code {
+    font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+  }
+
+  .mini-panel {
+    padding: 0.95em 0.8em 0.8em;
+    border-radius: 1.7em;
+    background: rgb(226 225 222);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.55),
+      var(--sticker-shadow);
+  }
+  .mp-wordmark {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.12em;
+    padding-left: 0.3em;
+    font-family: var(--font-pixel);
+    font-size: 1.45em;
+    line-height: 1.1;
+    letter-spacing: 0;
+    color: #2a2a2c;
+  }
+  .mp-wordmark :global(.mp-ast) {
+    width: 0.42em;
+    height: 0.42em;
+    margin-top: 0.06em;
+    color: var(--color-amber);
+  }
+  .mp-searchrow {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 0.7em;
+  }
+  .mp-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    height: 2.3em;
+    padding: 0 0.8em;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.92);
+    color: #8a8a8f;
+  }
+  .mp-search-icon {
+    width: 1em;
+    height: 1em;
+    color: #7c7c81;
+  }
+  .mp-more {
+    display: grid;
+    place-items: center;
+    width: 2.3em;
+    height: 2.3em;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.92);
+  }
+  .mp-more svg {
+    width: 0.95em;
+    fill: #3a3a3c;
+  }
+  .mp-sec {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    padding: 0.85em 0.45em 0.45em;
+    font-size: 0.8em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #828287;
+    white-space: nowrap;
+  }
+  .mp-sec-first {
+    padding-top: 0.15em;
+  }
+  .mp-sec i {
+    flex: 1;
+    height: 1px;
+    background: rgb(0 0 0 / 0.1);
+  }
+  .mp-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7em;
+    padding: 0.7em 0.85em;
+    border-radius: 1.15em;
+    background: rgb(255 255 255 / 0.95);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.04);
+  }
+  .mp-row + .mp-row {
+    margin-top: 0.5em;
+  }
+  .mp-check {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.15em;
+    height: 1.15em;
+    margin-top: 0.15em;
+    border-radius: 50%;
+    border: 0.085em solid #8d8d92;
+  }
+  .mp-check svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .is-done {
+    outline: 2px solid var(--color-amber);
+    outline-offset: -2px;
+  }
+  .is-done .mp-check {
+    background: var(--color-amber);
+    border-color: var(--color-amber);
+  }
+  .is-done p {
+    color: #8a8a8f;
+    text-decoration: line-through 1px #8a8a8f;
+  }
+  .mp-link {
+    color: var(--color-amber);
+  }
+  .mp-toast {
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    width: max-content;
+    margin: 0.75em auto 0.1em;
+    padding: 0.5em 1em 0.5em 0.8em;
+    border-radius: 999px;
+    background: rgb(250 250 250);
+    box-shadow:
+      0 0 0 1px rgb(0 0 0 / 0.05),
+      0 0.4em 1.1em rgb(0 0 0 / 0.14);
+    font-weight: 500;
+  }
+  .mp-toast svg {
+    width: 1.1em;
+    height: 1.1em;
+  }
+  .mp-toast circle {
+    fill: var(--color-amber);
+  }
+  .mp-toast path {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* A lone note, as if peeled off the panel. */
+  .mp-card .mp-row {
+    background: #fff;
+    box-shadow: var(--sticker-shadow);
+  }
+
+  .hud {
+    padding-top: 0.6em;
+  }
+  .hud-pointer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.95em;
+    height: 1.45em;
+    fill: #111;
+    stroke: #fff;
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.25));
+  }
+  .hud-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 1.2em 0 0 0.9em;
+    padding: 0.55em 1.05em 0.55em 0.85em;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.86);
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    box-shadow: 0 0.6em 1.4em -0.4em rgb(0 0 0 / 0.4);
+  }
+  .hud-pill :global(.hud-ast) {
+    width: 0.95em;
+    height: 0.95em;
+    color: var(--color-amber-bright);
+  }
+
+  .keys {
+    display: flex;
+    gap: 0.45em;
+  }
+  .keys span {
+    display: grid;
+    place-items: center;
+    width: 2.6em;
+    height: 2.6em;
+    border-radius: 0.55em;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgb(40 30 10 / 0.12),
+      0 0.2em 0 rgb(40 30 10 / 0.14),
+      0 0.8em 1.6em -0.6em rgb(70 45 10 / 0.35);
+    font-size: 1.15em;
+    font-weight: 500;
+    color: #333;
+  }
+</style>

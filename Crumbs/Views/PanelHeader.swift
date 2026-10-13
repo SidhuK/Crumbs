@@ -13,7 +13,7 @@ struct PanelHeader: View {
         @Bindable var model = model
 
         VStack(alignment: .leading, spacing: 10) {
-            Wordmark(size: 20)
+            HeaderWordmark()
                 .padding(.leading, 6)
             searchRow
         }
@@ -51,6 +51,15 @@ struct PanelHeader: View {
             PanelMenu()
                 .background(PanelStyle.cardFill, in: .circle)
         }
+    }
+}
+
+/// Its own view so a capture only invalidates the wordmark, not the search field.
+private struct HeaderWordmark: View {
+    @Environment(PanelModel.self) private var model
+
+    var body: some View {
+        Wordmark(size: 20, spinCount: model.captureCount)
     }
 }
 

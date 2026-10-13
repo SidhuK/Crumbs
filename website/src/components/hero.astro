@@ -1,0 +1,209 @@
+---
+import Container from "@/components/container.astro";
+import DitherCloud from "@/components/dither-cloud.astro";
+import Asterisk from "@/components/ui/asterisk.astro";
+import StarButton from "@/components/ui/star-button.astro";
+import { site } from "@/site";
+---
+
+<section class="relative overflow-x-clip">
+  <Container
+    class="grid items-center gap-14 pb-16 pt-14 sm:pt-20 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-12 lg:pb-20 lg:pt-12">
+    <div class="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-none lg:text-left">
+      <p class="inline-flex items-start gap-[0.1em] font-pixel text-[1.9rem] leading-none text-ink">
+        Crumbs<Asterisk class="mt-[0.04em] size-[0.42em] text-amber" />
+      </p>
+
+      <p class="mt-14 text-[13px] text-muted lg:mt-24">
+        Free and open source<span class="mx-1.5" aria-hidden="true">·</span>for macOS
+      </p>
+
+      <h1
+        class="mt-4 text-balance font-serif text-[2.6rem] font-medium leading-[1.12] text-ink sm:text-[3.25rem] lg:text-[clamp(2.9rem,4.4vw,3.95rem)]">
+        Save any text in two taps.
+      </h1>
+
+      <p class="mx-auto mt-5 max-w-[25rem] text-pretty text-base leading-relaxed text-ink-soft lg:mx-0">
+        Select something in any app on your Mac and tap Shift twice. It lands in a floating panel as a note.
+      </p>
+
+      <div class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
+        <a href={site.releases} class="btn-ink text-[15px]">Download for Mac <span aria-hidden="true">→</span></a>
+        <StarButton class="text-[15px]" />
+      </div>
+    </div>
+
+    <div class="hv">
+      <div class="hv-cloud" aria-hidden="true">
+        <DitherCloud />
+      </div>
+
+      <p class="hv-note font-hand" aria-hidden="true">see it in action!</p>
+      <svg class="hv-arrow" viewBox="0 0 70 60" fill="none" aria-hidden="true">
+        <path d="M4 9c14-6 31-6 42 2 9 6 13 17 14 32"></path>
+        <path d="M52 36.5c3 2.8 5.3 5.6 8.2 8.6 1.5-3.7 3.4-6.9 6-9.9"></path>
+      </svg>
+
+      <figure class="hv-frame">
+        <video
+          class="block aspect-[1600/972] w-full bg-[#f6f3ee]"
+          poster="/images/crumbs-demo-poster.webp"
+          width="1600"
+          height="972"
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          data-hero-video
+          aria-label="Screen recording: text is selected in a chat, on a web page and in a README, and each selection appears as a note in the Crumbs panel after tapping Shift twice.">
+          <source src="/images/crumbs-demo.webm" type="video/webm" />
+          <source src="/images/crumbs-demo.mp4" type="video/mp4" />
+        </video>
+        <button type="button" class="hv-toggle" data-hero-video-toggle aria-label="Pause video">
+          <span class="hv-icon-pause" aria-hidden="true"></span>
+          <span class="hv-icon-play" aria-hidden="true"></span>
+        </button>
+      </figure>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .hv {
+    position: relative;
+    width: 100%;
+    max-width: 46rem;
+    margin-inline: auto;
+  }
+  @media (min-width: 1024px) {
+    .hv {
+      margin-inline: 0;
+      padding-top: 3.2rem;
+    }
+  }
+
+  .hv-cloud {
+    position: absolute;
+    inset: -12% -14% -16% -14%;
+    pointer-events: none;
+  }
+
+  .hv-note,
+  .hv-arrow {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .hv-note {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0.5rem;
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      color: var(--color-ink-soft);
+      transform: rotate(-3deg);
+    }
+    .hv-arrow {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 11.6rem;
+      width: 3.6rem;
+      height: 3.1rem;
+      stroke: var(--color-ink-soft);
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  }
+
+  .hv-frame {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid var(--color-line);
+    background: #fff;
+    box-shadow:
+      0 30px 60px -30px oklch(0.3 0.02 81.53 / 0.4),
+      0 2px 6px oklch(0.3 0.02 81.53 / 0.08);
+  }
+
+  .hv-toggle {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+    background: oklch(0.3 0.0197 81.53 / 0.85);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .hv-frame:hover .hv-toggle,
+  .hv-toggle:focus-visible,
+  .hv-frame[data-paused] .hv-toggle {
+    opacity: 1;
+  }
+  .hv-toggle:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
+  }
+  .hv-icon-pause {
+    width: 10px;
+    height: 12px;
+    border-inline: 3px solid currentColor;
+  }
+  .hv-icon-play {
+    display: none;
+    margin-left: 3px;
+    border-block: 7px solid transparent;
+    border-left: 11px solid currentColor;
+  }
+  .hv-frame[data-paused] .hv-icon-pause {
+    display: none;
+  }
+  .hv-frame[data-paused] .hv-icon-play {
+    display: block;
+  }
+</style>
+
+<script>
+  const video = document.querySelector<HTMLVideoElement>("[data-hero-video]");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-hero-video-toggle]");
+  const frame = video?.closest<HTMLElement>(".hv-frame");
+  // People who prefer reduced motion see the poster and start the video themselves.
+  let userPaused = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function sync() {
+    if (!video || !toggle || !frame) return;
+    frame.toggleAttribute("data-paused", video.paused);
+    toggle.setAttribute("aria-label", video.paused ? "Play video" : "Pause video");
+  }
+
+  if (video && toggle) {
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    toggle.addEventListener("click", () => {
+      userPaused = !video.paused;
+      if (video.paused) video.play();
+      else video.pause();
+    });
+    sync();
+
+    new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !userPaused) video.play().catch(() => {});
+        else if (!entry.isIntersecting) video.pause();
+      },
+      { threshold: 0.25 },
+    ).observe(video);
+  }
+</script>

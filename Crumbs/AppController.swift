@@ -81,11 +81,11 @@ final class AppController {
                 if settings.showPanelOnCapture, !panelController.isVisible {
                     panelController.show(focus: false)
                 }
-                hud.show("Captured", systemImage: "checkmark.circle.fill")
+                hud.show("Captured", icon: .asterisk)
             case .nothingSelected:
-                hud.show("Nothing Selected", systemImage: "text.cursor")
+                hud.show("Nothing Selected", icon: .symbol("text.cursor"))
             case .permissionRequired:
-                hud.show("Allow Accessibility Access", systemImage: "hand.raised.fill")
+                hud.show("Allow Accessibility Access", icon: .symbol("hand.raised.fill"))
                 permission.request()
                 panelController.show(focus: false)
             }
@@ -103,7 +103,7 @@ final class AppController {
             activeShortcut = combo
         } else if let combo {
             // Another app owns this combination: keep the previous shortcut and say why.
-            hud.show("\(combo.keycaps.joined()) is used by another app", systemImage: "exclamationmark.triangle.fill")
+            hud.show("\(combo.keycaps.joined()) is used by another app", icon: .symbol("exclamationmark.triangle.fill"))
             settings.togglePanelShortcut = activeShortcut
         }
     }
