@@ -80,13 +80,8 @@ private struct NoteContent: View {
                 .foregroundStyle(note.isDone ? .secondary : .primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            if showsDetails, let details = detailsCaption {
-                Text(verbatim: details)
-                    .font(.system(size: 11))
-                    .foregroundStyle(.tertiary)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .help(note.metadata.sources.first?.title ?? "")
+            if showsDetails, !note.metadata.isEmpty {
+                NoteDetails(metadata: note.metadata)
             }
 
             if note.isMultiline {
@@ -105,22 +100,77 @@ private struct NoteContent: View {
     private var moreLinesLabel: LocalizedStringResource {
         "\(note.extraLineCount) more lines"
     }
+}
 
-    /// "Safari · example.com · Oct 14, 2026 at 12:41 PM · Edited Oct 15, 2026 at 9:02 AM"
-    private var detailsCaption: String? {
-        let metadata = note.metadata
+/// Where and when a note came from, as one quiet line: link · app · date.
+///
+///     example.com · Oct 14, 2026 at 12:41 PM
+///     Paper.pdf · Preview · Oct 14, 2026 at 12:41 PM · Edited Oct 15, 2026 at 9:02 AM
+///
+/// The link opens the page or document. The app is left out for web pages, where the
+/// site says more than the browser's name.
+private struct NoteDetails: View {
+    let metadata: NoteMetadata
+    @Environment(PanelModel.self) private var model
+
+    private var source: CaptureSource? { metadata.sources.first }
+
+    private var link: (url: URL, label: String)? {
+        guard let url = source?.url, let place = source?.place else { return nil }
+        return (url, place)
+    }
+
+    private var otherSources: String? {
+        metadata.sources.count > 1 ? "+\(metadata.sources.count - 1)" : nil
+    }
+
+    /// Everything after the link, already joined.
+    private var rest: String {
         var parts: [String] = []
-        if let label = metadata.sources.first?.label {
-            let others = metadata.sources.count - 1
-            parts.append(others > 0 ? "\(label) +\(others)" : label)
+        let isWebPage = link.map { !$0.url.isFileURL } ?? false
+        if !isWebPage, let app = source?.app, !app.isEmpty {
+            parts.append([app, otherSources].compactMap { $0 }.joined(separator: " "))
         }
-        if let created = metadata.created ?? metadata.sources.first?.capturedAt {
+        if let created = metadata.created ?? source?.capturedAt {
             parts.append(created.formatted(date: .abbreviated, time: .shortened))
         }
         if let modified = metadata.modified {
             parts.append(String(localized: "Edited \(modified.formatted(date: .abbreviated, time: .shortened))"))
         }
-        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+        return parts.joined(separator: " · ")
+    }
+
+    var body: some View {
+        let trailing = self.rest
+        HStack(spacing: 0) {
+            if let link {
+                Button {
+                    model.openSource(link.url)
+                } label: {
+                    Text(verbatim: link.label)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.tint)
+                .pointerStyle(.link)
+                .help(link.url.isFileURL ? link.url.path(percentEncoded: false) : link.url.absoluteString)
+
+                // On web pages the app is hidden, so the source count follows the link.
+                if !link.url.isFileURL, let otherSources {
+                    Text(verbatim: " \(otherSources)")
+                }
+                if !trailing.isEmpty {
+                    Text(verbatim: " · ")
+                }
+            }
+            Text(verbatim: trailing)
+                .lineLimit(1)
+                .fixedSize()
+                .help(source?.title ?? "")
+        }
+        .font(.system(size: 11))
+        .foregroundStyle(.tertiary)
     }
 }
 
