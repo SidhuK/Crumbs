@@ -11,15 +11,25 @@ import Carbon.HIToolbox
 /// It sends that app a Copy command, reads the rich text it puts on the pasteboard,
 /// then puts the user's original clipboard back. If the app ignores Copy, it falls
 /// back to the Accessibility "selected text" attribute.
+///
+/// When asked, it also notes where the selection came from (see `SourceInspector`).
 final class SelectionCapturer {
+    struct Capture {
+        var text: String
+        var source: CaptureSource?
+    }
+
     enum Outcome {
-        case captured(String)
+        case captured(Capture)
         case nothingSelected
         case permissionRequired
     }
 
-    func captureSelection() async -> Outcome {
+    func captureSelection(recordSource: Bool) async -> Outcome {
         guard AXIsProcessTrusted() else { return .permissionRequired }
+
+        // Read before copying, while the source app is certainly the one in front.
+        var inspection = recordSource ? SourceInspector.inspectFrontmostApp() : nil
 
         let pasteboard = NSPasteboard.general
         let snapshot = PasteboardSnapshot(pasteboard)
@@ -46,6 +56,10 @@ final class SelectionCapturer {
             // should see the copied selection in place of the user's clipboard meanwhile.
             snapshot.restore(to: pasteboard)
             text = RichTextMarkdown.markdown(from: clipping)
+            // A page URL the browser put on the pasteboard is the most reliable link.
+            if let sourceURL = clipping.sourceURL.flatMap(SourceInspector.acceptable) {
+                inspection?.source.url = sourceURL
+            }
         } else {
             restoreIfCopiedLate(snapshot, changeCount: initialChangeCount, pasteboard: pasteboard)
         }
@@ -55,7 +69,11 @@ final class SelectionCapturer {
         }
 
         guard let text, !text.isEmpty else { return .nothingSelected }
-        return .captured(text)
+        if var found = inspection, found.source.url == nil {
+            found.source.url = SourceInspector.webPageURL(processID: found.processID)
+            inspection = found
+        }
+        return .captured(Capture(text: text, source: inspection?.source))
     }
 
     /// A slow app may still answer the synthetic ⌘C after we stopped waiting. Watch a

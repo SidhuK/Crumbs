@@ -53,7 +53,7 @@ Your notes are plain Markdown files on your disk. There's no account and no sync
 
 ## How it works
 
-Crumbs never reads other apps' windows. When you double-tap the capture key, it asks the app in front to copy the selection, the same as if you pressed <kbd>⌘C</kbd> yourself, then puts your clipboard back.
+When you double-tap the capture key, Crumbs asks the app in front to copy the selection, the same as if you pressed <kbd>⌘C</kbd> yourself, then puts your clipboard back. At the same moment it notes where the selection came from: the app, the window title, and the page or document link when the app shares one. That's saved with the note in your Markdown file, and you can turn it off in Settings.
 
 ```mermaid
 flowchart LR

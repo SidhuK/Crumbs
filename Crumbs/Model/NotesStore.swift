@@ -112,10 +112,11 @@ final class NotesStore {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    func addNote(_ text: String, to sectionID: NoteSection.ID? = nil) -> Note.ID? {
+    /// Adds a note stamped with the current time, and with where it was captured from, if known.
+    func addNote(_ text: String, sources: [CaptureSource] = [], to sectionID: NoteSection.ID? = nil) -> Note.ID? {
         let text = Self.cleaned(text)
         guard !text.isEmpty else { return nil }
-        let note = Note(text: text)
+        let note = Note(text: text, metadata: NoteMetadata(created: NoteMetadata.now(), sources: sources))
         let targetID = sectionID ?? resolvedTargetSectionID
         mutate { sections in
             if let index = sections.firstIndex(where: { $0.id == targetID }) {
@@ -136,8 +137,10 @@ final class NotesStore {
             delete([id])
             return
         }
+        let now = NoteMetadata.now()
         mutate(registerUndo: registerUndo) { sections in
             sections[location.section].notes[location.note].text = text
+            sections[location.section].notes[location.note].metadata.modified = now
         }
     }
 
@@ -175,6 +178,7 @@ final class NotesStore {
         guard ordered.count > 1, let firstID = ordered.first else { return nil }
         let notes = ordered.compactMap(note)
         let mergedText = notes.map(\.text).joined(separator: "\n")
+        let mergedMetadata = NoteMetadata.merged(notes.map(\.metadata), at: NoteMetadata.now())
         let rest = Set(ordered.dropFirst())
         mutate { sections in
             for s in sections.indices {
@@ -182,6 +186,7 @@ final class NotesStore {
                 if let n = sections[s].notes.firstIndex(where: { $0.id == firstID }) {
                     sections[s].notes[n].text = mergedText
                     sections[s].notes[n].isDone = false
+                    sections[s].notes[n].metadata = mergedMetadata
                 }
             }
         }
@@ -465,7 +470,8 @@ final class NotesStore {
                 ? sectionIDs[section.title]!.removeFirst() : section.id
             let notes = section.notes.map { note in
                 let id = noteIDs[note.text]?.isEmpty == false ? noteIDs[note.text]!.removeFirst() : note.id
-                return Note(id: id, text: note.text, isDone: note.isDone)
+                // Keep everything the file says about the note; only its identity carries over.
+                return note.withID(id)
             }
             return NoteSection(id: sectionID, title: section.title, notes: notes)
         }

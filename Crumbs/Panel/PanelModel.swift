@@ -103,11 +103,16 @@ final class PanelModel {
         let hideDone = settings.hideDoneNotes
         return store.sections.compactMap { section in
             let notes = section.notes.filter { note in
-                (!hideDone || !note.isDone) && (query.isEmpty || note.text.localizedStandardContains(query))
+                (!hideDone || !note.isDone) && (query.isEmpty || Self.note(note, matches: query))
             }
             if !query.isEmpty && notes.isEmpty { return nil }
             return VisibleSection(section: section, notes: notes)
         }
+    }
+
+    /// Searches the text, and the app and site a note was captured from.
+    private static func note(_ note: Note, matches query: String) -> Bool {
+        note.text.localizedStandardContains(query) || note.metadata.sources.contains { $0.matches(query) }
     }
 
     var visibleNoteIDs: [Note.ID] {
@@ -244,6 +249,15 @@ final class PanelModel {
         guard !notes.isEmpty else { return }
         writeToPasteboard(notes.map(\.text).joined(separator: "\n\n"))
         showToast("Copied \(notes.count) Notes", systemImage: "doc.on.doc")
+    }
+
+    func openSource(_ url: URL) {
+        NSWorkspace.shared.open(url)
+    }
+
+    func copySourceLink(_ url: URL) {
+        writeToPasteboard(url.isFileURL ? url.path(percentEncoded: false) : url.absoluteString)
+        showToast("Copied Link", systemImage: "link")
     }
 
     /// Copies notes as a numbered list, ready to paste into a chat.
@@ -426,8 +440,8 @@ final class PanelModel {
 
     // MARK: - Capture
 
-    func didCapture(_ text: String) {
-        guard let id = store.addNote(text) else { return }
+    func didCapture(_ text: String, source: CaptureSource? = nil) {
+        guard let id = store.addNote(text, sources: source.map { [$0] } ?? []) else { return }
         captureCount += 1
         scroll(to: id)
         flash(id)

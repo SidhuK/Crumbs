@@ -72,6 +72,107 @@ struct NotesMarkdownTests {
         #expect(sections[0].notes.map(\.text) == ["Just a thought", "bullet item", "done item"])
         #expect(sections[0].notes.map(\.isDone) == [false, false, true])
     }
+
+    // MARK: Metadata
+
+    private static let sampleDate = Date(timeIntervalSince1970: 1_792_000_000)
+
+    private static func sampleMetadata(title: String = "Config formats") -> NoteMetadata {
+        NoteMetadata(
+            created: sampleDate,
+            modified: sampleDate.addingTimeInterval(3600),
+            sources: [CaptureSource(
+                app: "Safari",
+                bundleID: "com.apple.Safari",
+                title: title,
+                url: URL(string: "https://example.com/configs?a=1&b=2"),
+                capturedAt: sampleDate
+            )]
+        )
+    }
+
+    @Test func metadataRoundTripsAsAHiddenLastLine() throws {
+        let note = Note(text: "Use **TOML**\n1. With a schema", isDone: true, metadata: Self.sampleMetadata())
+        let markdown = NotesMarkdown.serialize([NoteSection(title: "Formats", notes: [note])])
+        let lines = markdown.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
+
+        #expect(lines[2] == "- [x] Use **TOML**")
+        #expect(lines[3] == "  1. With a schema")
+        #expect(lines[4].hasPrefix("  <!-- crumb {"))
+        #expect(lines[4].hasSuffix("} -->"))
+
+        let parsed = try #require(NotesMarkdown.parse(markdown).first?.notes.first)
+        #expect(parsed.text == note.text)
+        #expect(parsed.isDone)
+        #expect(parsed.metadata == note.metadata)
+    }
+
+    @Test func metadataCommentSurvivesDashesInValues() throws {
+        let metadata = Self.sampleMetadata(title: "a --> b -- c --- d")
+        let comment = try #require(metadata.markdownComment)
+        let inner = comment.dropFirst("<!-- ".count).dropLast(" -->".count)
+
+        #expect(!inner.contains("--"))
+        #expect(NoteMetadata(markdownComment: comment) == metadata)
+    }
+
+    @Test func malformedMetadataStaysInTheNote() throws {
+        let source = "- [ ] Keep me\n  <!-- crumb {not json -->\n"
+        let note = try #require(NotesMarkdown.parse(source).first?.notes.first)
+
+        #expect(note.text == "Keep me\n<!-- crumb {not json -->")
+        #expect(note.metadata.isEmpty)
+        #expect(NotesMarkdown.serialize(NotesMarkdown.parse(source)) == source)
+    }
+
+    @Test func aCommentAloneIsNotMetadata() throws {
+        let comment = try #require(Self.sampleMetadata().markdownComment)
+        let note = try #require(NotesMarkdown.parse("- [ ] \(comment)\n").first?.notes.first)
+
+        #expect(note.text == comment)
+        #expect(note.metadata.isEmpty)
+    }
+
+    @Test func filesWithoutMetadataSaveUnchanged() {
+        let source = """
+        - [ ] Loose note
+
+        ## Research
+
+        - [ ] **Negation in inherited configs.** The moment a config can extend a base
+        - [x] Three things worth locking down before it ships:
+          1. A `version` field on the format.
+
+          2. An effective-config command.
+
+        ## Empty
+        """ + "\n"
+
+        #expect(NotesMarkdown.serialize(NotesMarkdown.parse(source)) == source)
+    }
+
+    @Test func mergedMetadataKeepsEverySourceAndTheEarliestDate() {
+        let first = Self.sampleMetadata()
+        var second = Self.sampleMetadata(title: "Other page")
+        second.created = Self.sampleDate.addingTimeInterval(-60)
+        let now = Self.sampleDate.addingTimeInterval(7200)
+
+        let merged = NoteMetadata.merged([first, second, first], at: now)
+
+        #expect(merged.created == Self.sampleDate.addingTimeInterval(-60))
+        #expect(merged.modified == now)
+        #expect(merged.sources.map(\.title) == ["Config formats", "Other page"])
+    }
+
+    @Test func sourceLabelUsesTheSiteOrFileName() {
+        let page = CaptureSource(app: "Safari", url: URL(string: "https://www.example.com/a"), capturedAt: .now)
+        let file = CaptureSource(app: "Preview", url: URL(filePath: "/Users/me/Paper.pdf"), capturedAt: .now)
+
+        #expect(page.label == "Safari · example.com")
+        #expect(file.label == "Preview · Paper.pdf")
+        #expect(page.matches("example"))
+        #expect(!page.matches("Preview"))
+    }
 }
 
 @MainActor
@@ -219,7 +320,9 @@ struct NotesStoreTests {
 
         let fileURL = try #require(store.fileURL)
         let saved = try String(contentsOf: fileURL, encoding: .utf8)
-        #expect(saved == "## Research\n\n- [ ] Captured idea\n\n## Formats\n")
+        // New notes are stamped with when they were created, on a hidden comment line.
+        #expect(saved.hasPrefix("## Research\n\n- [ ] Captured idea\n  <!-- crumb {\"created\":\""))
+        #expect(saved.hasSuffix(" -->\n\n## Formats\n"))
     }
 
     @Test func mergeJoinsNotesInDocumentOrder() throws {
@@ -231,6 +334,59 @@ struct NotesStoreTests {
 
         #expect(merged == a)
         #expect(texts == ["How should configuration migrations work?\nShould plugins own their configuration schema?"])
+    }
+
+    @Test func newNotesRecordCreationAndSources() throws {
+        let store = try makeStore()
+        let source = CaptureSource(app: "Safari", url: URL(string: "https://example.com"), capturedAt: NoteMetadata.now())
+        let id = try #require(store.addNote("Captured", sources: [source]))
+        let note = try #require(store.note(id))
+
+        #expect(note.metadata.created != nil)
+        #expect(note.metadata.modified == nil)
+        #expect(note.metadata.sources == [source])
+    }
+
+    @Test func editingTextSetsModified() throws {
+        let store = try makeStore()
+        let id = try added(store, "Before")
+        store.toggleDone([id])
+        #expect(store.note(id)?.metadata.modified == nil)
+
+        store.updateText(of: id, to: "After")
+        #expect(store.note(id)?.metadata.modified != nil)
+    }
+
+    @Test func mergeCombinesSources() throws {
+        let store = try makeStore()
+        let one = CaptureSource(app: "Safari", capturedAt: NoteMetadata.now())
+        let two = CaptureSource(app: "Preview", capturedAt: NoteMetadata.now())
+        let a = try #require(store.addNote("First", sources: [one]))
+        let b = try #require(store.addNote("Second", sources: [two]))
+
+        let merged = try #require(store.merge([a, b]))
+        let note = try #require(store.note(merged))
+
+        #expect(note.metadata.sources == [one, two])
+        #expect(note.metadata.modified != nil)
+    }
+
+    @Test func metadataSurvivesSaveAndOutsideEdits() throws {
+        let store = try makeStore()
+        let source = CaptureSource(app: "Safari", title: "Page", capturedAt: NoteMetadata.now())
+        let id = try #require(store.addNote("Keep my source", sources: [source]))
+        store.saveNow()
+        let before = try #require(store.note(id))
+
+        // Another app appends a note; the store reloads the file.
+        let fileURL = try #require(store.fileURL)
+        let onDisk = try String(contentsOf: fileURL, encoding: .utf8)
+        try Data((onDisk + "- [ ] Added elsewhere\n").utf8).write(to: fileURL)
+        store.filesDidChange()
+
+        let after = try #require(store.note(id))
+        #expect(after.metadata == before.metadata)
+        #expect(store.allNotes.map(\.text) == ["Keep my source", "Added elsewhere"])
     }
 
     @Test func shiftCrossesSectionBoundaries() throws {
@@ -317,6 +473,28 @@ struct NotesStoreTests {
         #expect(notes[0].id == kept.id)
         #expect(notes[0].isDone)
         #expect(notes[1].id != old[0].notes[1].id)
+    }
+
+    @Test func withIDChangesOnlyTheIdentity() {
+        let note = Note(text: "keep me\n  second line", isDone: true)
+        let newID = UUID()
+        let copy = note.withID(newID)
+
+        #expect(copy.id == newID)
+        #expect(copy.text == note.text)
+        #expect(copy.isDone == note.isDone)
+    }
+
+    @Test func reconcileTakesFieldsFromTheReloadedFile() throws {
+        let kept = Note(text: "same text", isDone: false)
+        let old = [NoteSection(title: "", notes: [kept])]
+        let new = NotesMarkdown.parse("- [x] same text\n")
+
+        let reconciled = NotesStore.reconcile(old: old, new: new)
+        let note = try #require(reconciled.first?.notes.first)
+
+        #expect(note.id == kept.id)
+        #expect(note == new[0].notes[0].withID(kept.id))
     }
 
     @Test func listsAreSortedMarkdownFiles() throws {

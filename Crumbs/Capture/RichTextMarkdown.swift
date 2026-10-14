@@ -14,12 +14,18 @@ nonisolated enum RichTextMarkdown {
         var plain: String?
         var rtf: Data?
         var html: Data?
+        /// The page the text was copied from, when the app records it. Chromium-based
+        /// browsers add this flavor when copying from a web page.
+        var sourceURL: URL?
+
+        static let chromiumSourceURL = NSPasteboard.PasteboardType("org.chromium.source-url")
 
         @MainActor
         init(_ pasteboard: NSPasteboard) {
             plain = pasteboard.string(forType: .string)
             rtf = pasteboard.data(forType: .rtf)
             html = pasteboard.data(forType: .html)
+            sourceURL = pasteboard.string(forType: Self.chromiumSourceURL).flatMap(URL.init(string:))
         }
     }
 

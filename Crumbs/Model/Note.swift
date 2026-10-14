@@ -7,14 +7,16 @@ import Foundation
 
 /// A single captured crumb. `text` is Markdown; the first line acts as the title.
 nonisolated struct Note: Identifiable, Hashable, Sendable {
-    let id: UUID
+    private(set) var id: UUID
     var text: String
     var isDone: Bool
+    var metadata: NoteMetadata
 
-    init(id: UUID = UUID(), text: String, isDone: Bool = false) {
+    init(id: UUID = UUID(), text: String, isDone: Bool = false, metadata: NoteMetadata = NoteMetadata()) {
         self.id = id
         self.text = text
         self.isDone = isDone
+        self.metadata = metadata
     }
 
     /// The first line of the note.
@@ -29,6 +31,14 @@ nonisolated struct Note: Identifiable, Hashable, Sendable {
     }
 
     var isMultiline: Bool { extraLineCount > 0 }
+
+    /// A copy with a different identity and every other field unchanged, so callers that
+    /// re-identify notes (reconciling a reloaded file) never drop fields added later.
+    func withID(_ id: UUID) -> Note {
+        var copy = self
+        copy.id = id
+        return copy
+    }
 }
 
 /// A titled group of notes. Only the first section of a list may be untitled.

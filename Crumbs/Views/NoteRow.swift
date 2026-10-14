@@ -30,7 +30,7 @@ struct NoteRow: View {
             if isEditing {
                 NoteEditField(noteID: note.id, initialText: note.text, focus: $focus)
             } else {
-                NoteContent(note: note, isExpanded: isExpanded)
+                NoteContent(note: note, isExpanded: isExpanded, showsDetails: isExpanded || isSelected)
                     .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
                     // VoiceOver's default action selects, like a click.
                     .accessibilityAction { model.click(note.id, modifiers: [], clickCount: 1) }
@@ -66,6 +66,8 @@ struct NoteRow: View {
 private struct NoteContent: View {
     let note: Note
     let isExpanded: Bool
+    /// Shows where and when the note was captured, for the expanded or selected note.
+    let showsDetails: Bool
     @Environment(PanelModel.self) private var model
 
     var body: some View {
@@ -77,6 +79,10 @@ private struct NoteContent: View {
                 .strikethrough(note.isDone)
                 .foregroundStyle(note.isDone ? .secondary : .primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
+
+            if showsDetails, !note.metadata.isEmpty {
+                NoteDetails(metadata: note.metadata)
+            }
 
             if note.isMultiline {
                 Button {
@@ -93,6 +99,78 @@ private struct NoteContent: View {
 
     private var moreLinesLabel: LocalizedStringResource {
         "\(note.extraLineCount) more lines"
+    }
+}
+
+/// Where and when a note came from, as one quiet line: link · app · date.
+///
+///     example.com · Oct 14, 2026 at 12:41 PM
+///     Paper.pdf · Preview · Oct 14, 2026 at 12:41 PM · Edited Oct 15, 2026 at 9:02 AM
+///
+/// The link opens the page or document. The app is left out for web pages, where the
+/// site says more than the browser's name.
+private struct NoteDetails: View {
+    let metadata: NoteMetadata
+    @Environment(PanelModel.self) private var model
+
+    private var source: CaptureSource? { metadata.sources.first }
+
+    private var link: (url: URL, label: String)? {
+        guard let url = source?.url, let place = source?.place else { return nil }
+        return (url, place)
+    }
+
+    private var otherSources: String? {
+        metadata.sources.count > 1 ? "+\(metadata.sources.count - 1)" : nil
+    }
+
+    /// Everything after the link, already joined.
+    private var rest: String {
+        var parts: [String] = []
+        let isWebPage = link.map { !$0.url.isFileURL } ?? false
+        if !isWebPage, let app = source?.app, !app.isEmpty {
+            parts.append([app, otherSources].compactMap { $0 }.joined(separator: " "))
+        }
+        if let created = metadata.created ?? source?.capturedAt {
+            parts.append(created.formatted(date: .abbreviated, time: .shortened))
+        }
+        if let modified = metadata.modified {
+            parts.append(String(localized: "Edited \(modified.formatted(date: .abbreviated, time: .shortened))"))
+        }
+        return parts.joined(separator: " · ")
+    }
+
+    var body: some View {
+        let trailing = self.rest
+        HStack(spacing: 0) {
+            if let link {
+                Button {
+                    model.openSource(link.url)
+                } label: {
+                    Text(verbatim: link.label)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.tint)
+                .pointerStyle(.link)
+                .help(link.url.isFileURL ? link.url.path(percentEncoded: false) : link.url.absoluteString)
+
+                // On web pages the app is hidden, so the source count follows the link.
+                if !link.url.isFileURL, let otherSources {
+                    Text(verbatim: " \(otherSources)")
+                }
+                if !trailing.isEmpty {
+                    Text(verbatim: " · ")
+                }
+            }
+            Text(verbatim: trailing)
+                .lineLimit(1)
+                .fixedSize()
+                .help(source?.title ?? "")
+        }
+        .font(.system(size: 11))
+        .foregroundStyle(.tertiary)
     }
 }
 
@@ -140,6 +218,13 @@ struct NoteContextMenu: View {
             .keyboardShortcut("c", modifiers: .command)
         Button("Copy as List") { model.copyAsList(targets) }
             .keyboardShortcut("c", modifiers: [.command, .shift])
+
+        if let sourceURL = model.store.note(noteID)?.metadata.sources.lazy.compactMap(\.url).first {
+            Divider()
+
+            Button("Open Source") { model.openSource(sourceURL) }
+            Button("Copy Source Link") { model.copySourceLink(sourceURL) }
+        }
 
         Divider()
 
