@@ -75,9 +75,9 @@ final class AppController {
         isCapturing = true
         Task {
             defer { isCapturing = false }
-            switch await capturer.captureSelection() {
-            case .captured(let text):
-                model.didCapture(text)
+            switch await capturer.captureSelection(recordSource: settings.recordCaptureSource) {
+            case .captured(let capture):
+                model.didCapture(capture.text, source: capture.source)
                 if settings.showPanelOnCapture, !panelController.isVisible {
                     panelController.show(focus: false)
                 }

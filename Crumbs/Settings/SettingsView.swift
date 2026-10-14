@@ -36,6 +36,10 @@ struct GeneralSettingsPane: View {
                     Text("Show the panel after capturing")
                     Text("Bring the panel forward when it's hidden, so you can see what you saved.")
                 }
+                Toggle(isOn: $settings.recordCaptureSource) {
+                    Text("Record where captures come from")
+                    Text("Saves the app, window title and link with each note, in your Markdown file.")
+                }
             }
 
             Section("Notes") {
@@ -59,7 +63,7 @@ struct GeneralSettingsPane: View {
             } header: {
                 Text("Permissions")
             } footer: {
-                Text("Accessibility access lets Crumbs notice the capture shortcut and copy your selection from other apps. Nothing leaves your Mac.")
+                Text("Accessibility access lets Crumbs notice the capture shortcut, copy your selection from other apps, and note the app, window and link it came from. Nothing leaves your Mac.")
                     .foregroundStyle(.secondary)
             }
         }

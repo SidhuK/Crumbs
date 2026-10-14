@@ -12,9 +12,11 @@ import Foundation
 ///     - [ ] **Negation in inherited configs.** The moment a config…
 ///     - [x] Three things worth locking down before it ships:
 ///       1. A `version` field on the format.
+///       <!-- crumb {"created":"2026-10-14T12:41:00-04:00"} -->
 ///
 /// Headings become sections, task items become notes, and lines indented by
-/// two spaces continue the note above them.
+/// two spaces continue the note above them. A note's last line may be a hidden
+/// comment holding its `NoteMetadata`.
 nonisolated enum NotesMarkdown {
     static let continuationIndent = "  "
 
@@ -29,14 +31,20 @@ nonisolated enum NotesMarkdown {
         var pendingDone = false
 
         func flushNote() {
-            guard let noteLines = pendingLines else { return }
+            guard var noteLines = pendingLines else { return }
             pendingLines = nil
+            // A metadata comment is only recognized as the last line of a note with text above it.
+            var metadata = NoteMetadata()
+            if noteLines.count > 1, let last = noteLines.last, let parsed = NoteMetadata(markdownComment: last) {
+                metadata = parsed
+                noteLines.removeLast()
+            }
             let text = noteLines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
             guard !text.isEmpty else { return }
             if sections.isEmpty {
                 sections.append(NoteSection(title: ""))
             }
-            sections[sections.count - 1].notes.append(Note(text: text, isDone: pendingDone))
+            sections[sections.count - 1].notes.append(Note(text: text, isDone: pendingDone, metadata: metadata))
         }
 
         func startNote(_ firstLine: String, done: Bool) {
@@ -105,6 +113,9 @@ nonisolated enum NotesMarkdown {
         var result = ["- [\(note.isDone ? "x" : " ")] \(first)"]
         for line in noteLines.dropFirst() {
             result.append(line.isEmpty ? "" : continuationIndent + line)
+        }
+        if let comment = note.metadata.markdownComment {
+            result.append(continuationIndent + comment)
         }
         return result
     }

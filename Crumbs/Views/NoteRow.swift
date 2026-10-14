@@ -30,7 +30,7 @@ struct NoteRow: View {
             if isEditing {
                 NoteEditField(noteID: note.id, initialText: note.text, focus: $focus)
             } else {
-                NoteContent(note: note, isExpanded: isExpanded)
+                NoteContent(note: note, isExpanded: isExpanded, showsDetails: isExpanded || isSelected)
                     .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
                     // VoiceOver's default action selects, like a click.
                     .accessibilityAction { model.click(note.id, modifiers: [], clickCount: 1) }
@@ -66,6 +66,8 @@ struct NoteRow: View {
 private struct NoteContent: View {
     let note: Note
     let isExpanded: Bool
+    /// Shows where and when the note was captured, for the expanded or selected note.
+    let showsDetails: Bool
     @Environment(PanelModel.self) private var model
 
     var body: some View {
@@ -77,6 +79,15 @@ private struct NoteContent: View {
                 .strikethrough(note.isDone)
                 .foregroundStyle(note.isDone ? .secondary : .primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
+
+            if showsDetails, let details = detailsCaption {
+                Text(verbatim: details)
+                    .font(.system(size: 11))
+                    .foregroundStyle(.tertiary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .help(note.metadata.sources.first?.title ?? "")
+            }
 
             if note.isMultiline {
                 Button {
@@ -93,6 +104,23 @@ private struct NoteContent: View {
 
     private var moreLinesLabel: LocalizedStringResource {
         "\(note.extraLineCount) more lines"
+    }
+
+    /// "Safari · example.com · Oct 14, 2026 at 12:41 PM · Edited Oct 15, 2026 at 9:02 AM"
+    private var detailsCaption: String? {
+        let metadata = note.metadata
+        var parts: [String] = []
+        if let label = metadata.sources.first?.label {
+            let others = metadata.sources.count - 1
+            parts.append(others > 0 ? "\(label) +\(others)" : label)
+        }
+        if let created = metadata.created ?? metadata.sources.first?.capturedAt {
+            parts.append(created.formatted(date: .abbreviated, time: .shortened))
+        }
+        if let modified = metadata.modified {
+            parts.append(String(localized: "Edited \(modified.formatted(date: .abbreviated, time: .shortened))"))
+        }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 }
 
@@ -140,6 +168,13 @@ struct NoteContextMenu: View {
             .keyboardShortcut("c", modifiers: .command)
         Button("Copy as List") { model.copyAsList(targets) }
             .keyboardShortcut("c", modifiers: [.command, .shift])
+
+        if let sourceURL = model.store.note(noteID)?.metadata.sources.lazy.compactMap(\.url).first {
+            Divider()
+
+            Button("Open Source") { model.openSource(sourceURL) }
+            Button("Copy Source Link") { model.copySourceLink(sourceURL) }
+        }
 
         Divider()
 

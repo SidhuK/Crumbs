@@ -10,11 +10,13 @@ nonisolated struct Note: Identifiable, Hashable, Sendable {
     private(set) var id: UUID
     var text: String
     var isDone: Bool
+    var metadata: NoteMetadata
 
-    init(id: UUID = UUID(), text: String, isDone: Bool = false) {
+    init(id: UUID = UUID(), text: String, isDone: Bool = false, metadata: NoteMetadata = NoteMetadata()) {
         self.id = id
         self.text = text
         self.isDone = isDone
+        self.metadata = metadata
     }
 
     /// The first line of the note.
