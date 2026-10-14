@@ -36,6 +36,10 @@ struct GeneralSettingsPane: View {
                     Text("Show the panel after capturing")
                     Text("Bring the panel forward when it's hidden, so you can see what you saved.")
                 }
+                Toggle(isOn: $settings.keepPanelOnTop) {
+                    Text("Keep the panel on top")
+                    Text("Float above other windows. When off, other apps can cover it, and your panel shortcut brings it back.")
+                }
             }
 
             Section("Notes") {

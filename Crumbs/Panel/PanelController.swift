@@ -51,6 +51,13 @@ final class PanelController {
         }
     }
 
+    /// Floating keeps the panel above other apps' windows; otherwise it's layered like
+    /// any other window, so clicking another app covers it until it's shown again.
+    var keepsOnTop: Bool {
+        get { panel.isFloatingPanel }
+        set { panel.isFloatingPanel = newValue }
+    }
+
     var isVisible: Bool { panel.isVisible }
     var isKey: Bool { panel.isKeyWindow }
 

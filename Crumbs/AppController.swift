@@ -30,6 +30,7 @@ final class AppController {
         model = PanelModel(store: store, settings: settings)
         panelController = PanelController(model: model, permission: permission)
         noteWindows = NoteWindowManager(store: store)
+        panelController.keepsOnTop = settings.keepPanelOnTop
         model.host = self
     }
 
@@ -116,6 +117,12 @@ final class AppController {
                 for await trigger in Observations({ settings.captureTrigger }) {
                     guard let self else { return }
                     self.doubleTapMonitor.trigger = trigger
+                }
+            },
+            Task { [weak self] in
+                for await keepOnTop in Observations({ settings.keepPanelOnTop }) {
+                    guard let self else { return }
+                    self.panelController.keepsOnTop = keepOnTop
                 }
             },
             Task { [weak self] in

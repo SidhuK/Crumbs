@@ -63,6 +63,11 @@ final class AppSettings {
         didSet { defaults.set(showPanelOnCapture, forKey: Keys.showPanelOnCapture) }
     }
 
+    /// Float the panel above other apps' windows. When off it's a normal window they can cover.
+    var keepPanelOnTop: Bool {
+        didSet { defaults.set(keepPanelOnTop, forKey: Keys.keepPanelOnTop) }
+    }
+
     var markDoneAfterCopyAsList: Bool {
         didSet { defaults.set(markDoneAfterCopyAsList, forKey: Keys.markDoneAfterCopyAsList) }
     }
@@ -94,6 +99,7 @@ final class AppSettings {
             togglePanelShortcut = .defaultTogglePanel
         }
         showPanelOnCapture = defaults.object(forKey: Keys.showPanelOnCapture) as? Bool ?? true
+        keepPanelOnTop = defaults.object(forKey: Keys.keepPanelOnTop) as? Bool ?? true
         markDoneAfterCopyAsList = defaults.object(forKey: Keys.markDoneAfterCopyAsList) as? Bool ?? true
         hideDoneNotes = defaults.bool(forKey: Keys.hideDoneNotes)
         storageFolder = defaults.string(forKey: Keys.storageFolder).map { URL(filePath: $0, directoryHint: .isDirectory) }
@@ -110,6 +116,7 @@ final class AppSettings {
         static let captureTrigger = "captureTrigger"
         static let togglePanelShortcut = "togglePanelShortcut"
         static let showPanelOnCapture = "showPanelOnCapture"
+        static let keepPanelOnTop = "keepPanelOnTop"
         static let markDoneAfterCopyAsList = "markDoneAfterCopyAsList"
         static let hideDoneNotes = "hideDoneNotes"
         static let storageFolder = "storageFolder"
