@@ -465,7 +465,8 @@ final class NotesStore {
                 ? sectionIDs[section.title]!.removeFirst() : section.id
             let notes = section.notes.map { note in
                 let id = noteIDs[note.text]?.isEmpty == false ? noteIDs[note.text]!.removeFirst() : note.id
-                return Note(id: id, text: note.text, isDone: note.isDone)
+                // Keep everything the file says about the note; only its identity carries over.
+                return note.withID(id)
             }
             return NoteSection(id: sectionID, title: section.title, notes: notes)
         }

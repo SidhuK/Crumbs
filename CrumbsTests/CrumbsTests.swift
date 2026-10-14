@@ -319,6 +319,28 @@ struct NotesStoreTests {
         #expect(notes[1].id != old[0].notes[1].id)
     }
 
+    @Test func withIDChangesOnlyTheIdentity() {
+        let note = Note(text: "keep me\n  second line", isDone: true)
+        let newID = UUID()
+        let copy = note.withID(newID)
+
+        #expect(copy.id == newID)
+        #expect(copy.text == note.text)
+        #expect(copy.isDone == note.isDone)
+    }
+
+    @Test func reconcileTakesFieldsFromTheReloadedFile() throws {
+        let kept = Note(text: "same text", isDone: false)
+        let old = [NoteSection(title: "", notes: [kept])]
+        let new = NotesMarkdown.parse("- [x] same text\n")
+
+        let reconciled = NotesStore.reconcile(old: old, new: new)
+        let note = try #require(reconciled.first?.notes.first)
+
+        #expect(note.id == kept.id)
+        #expect(note == new[0].notes[0].withID(kept.id))
+    }
+
     @Test func listsAreSortedMarkdownFiles() throws {
         let folder = try #require(TemporaryFolder.current)
         let files = NotesFileStore(folder: folder)
